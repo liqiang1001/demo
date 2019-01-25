@@ -1,0 +1,418 @@
+<div>
+  <nz-row nzGutter="24">
+    <form class="postForm" nz-form [formGroup]="postForm">
+      <nz-col nzSpan="14">
+        <nz-row nzGutter="8">
+          <!-- 企业 -->
+          <nz-row nzGutter="8" *ngIf="formLabel?.enterName?.visible == 1">
+            <nz-col nzSpan="12">
+              <nz-form-item nzFlex>
+                <nz-form-label [nzRequired]="formLabel.enterName.necessity == 1" nzSpan="8">{{formLabel.enterName.desc}}</nz-form-label>
+                <nz-form-control nzSpan="16">
+                  <input nz-input formControlName="enterName" [placeholder]="'请输入'+formLabel.enterName.desc" (input)="onInput($event.target?.value)"
+                    [nzAutocomplete]="auto">
+                  <nz-autocomplete nzBackfill #auto>
+                    <nz-auto-option *ngFor="let option of options" [nzValue]="option.name" (click)="selectEnt(option)">
+                      {{option.name}}
+                    </nz-auto-option>
+                  </nz-autocomplete>
+                </nz-form-control>
+              </nz-form-item>
+            </nz-col>
+            <nz-col nzSpan="3" *ngIf="!isRead">
+              <button nz-button (click)="addEnter()" nzType="primary" style="margin-top:4px;">添加企业</button>
+            </nz-col>
+            <nz-col nzSpan="9" style="display:flex;align-items: center;height:36px">
+              <a style="margin-left:20px;" class="dangan" target="_blank" *ngIf="enterHref" [href]="enterHref">
+                <i nz-icon [iconfont]="'icon-lianjie'" style="font-size:16px;"></i>
+                <span>企业档案</span>
+              </a>
+              <div style="margin-left:20px;" class="dangan" (click)="toDetail()" *ngIf="!enterHref">
+                <i nz-icon [iconfont]="'icon-lianjie'" style="font-size:16px;"></i>
+                <span>企业档案</span>
+              </div>
+              <div style="margin-left:20px;" class="dangan" *ngIf="enterHref" (click)="enterInfo()">
+                <i nz-icon [iconfont]="'icon-lianjie'" style="font-size:16px;"></i>
+                <span>企业备忘录</span>
+              </div>
+              <div style="margin-left:20px;" class="dangan" *ngIf="!enterHref" (click)="toDetail()">
+                <i nz-icon [iconfont]="'icon-lianjie'" style="font-size:16px;"></i>
+                <span>企业备忘录</span>
+              </div>
+            </nz-col>
+          </nz-row>
+          <!-- 参与人 -->
+          <nz-col nzSpan="12" *ngIf="formLabel?.participator?.visible == 1">
+            <nz-form-item nzFlex>
+              <nz-form-label [nzRequired]="formLabel.participator.necessity == 1" nzSpan="8">{{formLabel.participator.desc}}</nz-form-label>
+              <nz-form-control nzSpan="16">
+                <input nz-input formControlName="participator" [placeholder]="'请输入'+formLabel.participator.desc">
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+          <nz-col nzSpan="12" *ngIf="formLabel?.primaryParticipator?.visible == 1">
+            <nz-form-item nzFlex>
+              <nz-form-label [nzRequired]="formLabel.primaryParticipator.necessity == 1" nzSpan="8">{{formLabel.primaryParticipator.desc}}</nz-form-label>
+              <nz-form-control nzSpan="16">
+                <input nz-input formControlName="primaryParticipator" [placeholder]="'请输入'+formLabel.primaryParticipator.desc">
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+          <!-- 企业工作组 -->
+          <nz-col nzSpan="12" *ngIf="formLabel?.secondaryParticipator?.visible == 1">
+            <nz-form-item nzFlex>
+              <nz-form-label [nzRequired]="formLabel.secondaryParticipator.necessity == 1" nzSpan="8">{{formLabel.secondaryParticipator.desc}}</nz-form-label>
+              <nz-form-control nzSpan="16">
+                <input nz-input formControlName="secondaryParticipator" [placeholder]="'请输入'+formLabel.secondaryParticipator.desc">
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+          <!-- 被约谈人 -->
+          <div formArrayName="workComplains" style="margin-bottom: 15px;" *ngIf="DLtype == 'GovWorkType4'">
+            <nz-row class="complaList" *ngFor="let item of workRecord.controls;let i = index;" [formGroupName]="i"
+              nzGutter="16">
+              <div class="compla-title">
+                <h4>被约谈人{{i+1}} <span class="readcard" (click)="getReadCard(i)"><img src="assets/image/readcard.png"
+                      alt=""></span><i nz-icon style="margin-left:10px;color: #FDAC41;" type="question-circle" theme="fill"
+                    nz-popover [nzContent]="readcard"></i></h4>
+                <span *ngIf="i !== 0 && !isRead" (click)="removeItem(i)"><i nz-icon type="close-circle" theme="outline"></i></span>
+              </div>
+              <nz-col nzSpan="12">
+                <nz-form-item nzFlex>
+                  <nz-form-label [nzRequired]="true" nzSpan="8">姓名</nz-form-label>
+                  <nz-form-control nzSpan="16">
+                    <input nz-input name="name" formControlName="name" placeholder="请输入姓名">
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSpan="12">
+                <nz-form-item nzFlex>
+                  <nz-form-label [nzRequired]="true" nzSpan="8">职务</nz-form-label>
+                  <nz-form-control nzSpan="16">
+                    <input nz-input name="job" formControlName="job" placeholder="请输入职务">
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSpan="12">
+                <nz-form-item nzFlex>
+                  <nz-form-label nzSpan="8">身份证号</nz-form-label>
+                  <nz-form-control nzSpan="16">
+                    <input nz-input name="idNum" formControlName="idNum" placeholder="请输入身份证号">
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSpan="12">
+                <nz-form-item nzFlex>
+                  <nz-form-label [nzRequired]="true" nzSpan="8">联系电话</nz-form-label>
+                  <nz-form-control nzSpan="16">
+                    <input nz-input name="phone" formControlName="phone" placeholder="请输入联系电话">
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+            </nz-row>
+            <nz-row class="addbtn" *ngIf="!isRead">
+              <nz-col nzSpan="8" nzOffset="8">
+                <button nz-button nzType="primary" (click)="addWorkRecord()" nzBlock>新增被约谈人</button>
+              </nz-col>
+            </nz-row>
+          </div>
+          <!-- 进度 -->
+          <nz-col nzSpan="12" *ngIf="formLabel?.progress?.visible == 1">
+            <nz-form-item nzFlex>
+              <nz-form-label [nzRequired]="formLabel.progress.necessity == 1" nzSpan='8'>{{formLabel.progress.desc}}</nz-form-label>
+              <nz-form-control nzSpan='16'>
+                <nz-select style='width: 100%' formControlName='progress' [attr.id]='""' [nzPlaceHolder]='"请选择"'
+                  nzAllowClear>
+                  <nz-option *ngFor='let item of ProgressOpts' [nzLabel]='item.name' [nzValue]='item.val'></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+          <!-- 日期 -->
+          <nz-col nzSpan="12" *ngIf="formLabel?.recordDate?.visible == 1">
+            <nz-form-item nzFlex>
+              <nz-form-label [nzRequired]="formLabel.recordDate.necessity == 1" nzSpan="8">{{formLabel.recordDate.desc}}</nz-form-label>
+              <nz-form-control nzSpan="16">
+                <nz-date-picker style="width: 100%;" formControlName="recordDate" nzPlaceHolder="请选择" [nzShowTime]="false"></nz-date-picker>
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+          <nz-col nzSpan="3" *ngIf="DLtype == 'GovWorkType5'&&!recordId">
+            <button nz-button (click)="showModule()" nzType="primary" style="margin-top:4px;">上访记录</button>
+          </nz-col>
+          <!-- 投诉类型 -->
+          <nz-col nzSpan="24" *ngIf="formLabel?.complainTypes?.visible == 1">
+            <nz-form-item nzFlex>
+              <nz-form-label [nzRequired]="formLabel.complainTypes.necessity == 1" nzSpan="4">{{formLabel.complainTypes.desc}}(多选)</nz-form-label>
+              <nz-form-control nzSpan="20">
+                <nz-select style="width: 100%" nzMode="multiple" nzPlaceHolder="请选择" formControlName="complainTypes"
+                  (ngModelChange)="selectCompainType($event)">
+                  <nz-option *ngFor="let option of complainTypeOpts" [nzLabel]="option.label" [nzValue]="option.value"></nz-option>
+                </nz-select>
+                <input *ngIf="hasOtherType" nz-input formControlName="OtherType" placeholder="请输入其他投诉类型">
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+          <!-- 投诉人 -->
+          <div formArrayName="workComplains" style="margin-bottom: 15px;" *ngIf="DLtype == 'GovWorkType5'">
+            <nz-row class="complaList" *ngFor="let item of workRecord.controls;let i = index;" [formGroupName]="i"
+              nzGutter="16">
+              <div class="compla-title">
+                <h4>投诉人{{i+1}}<span class="readcard" (click)="getReadCard(i)"><img src="assets/image/readcard.png" alt=""></span><i
+                    nz-icon style="margin-left:10px;color: #FDAC41;" type="question-circle" theme="fill" nz-popover
+                    [nzContent]="readcard"></i></h4>
+                <span *ngIf="i !== 0 && !isRead" (click)="removeItem(i)"><i nz-icon type="close-circle" theme="outline"></i></span>
+              </div>
+              <nz-col nzSpan="12">
+                <nz-form-item nzFlex>
+                  <nz-form-label [nzRequired]="true" nzSpan="8">投诉人姓名</nz-form-label>
+                  <nz-form-control nzSpan="16">
+                    <input nz-input name="name" formControlName="name" placeholder="请输入投诉人姓名">
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSpan="12">
+                <nz-form-item nzFlex>
+                  <nz-form-label [nzRequired]="true" nzSpan="8">身份证号</nz-form-label>
+                  <nz-form-control nzSpan="16">
+                    <input nz-input name="idNum" formControlName="idNum" placeholder="请输入身份证号">
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSpan="12">
+                <nz-form-item nzFlex>
+                  <nz-form-label [nzRequired]="true" nzSpan="8">居住地</nz-form-label>
+                  <nz-form-control nzSpan="16">
+                    <input nz-input name="address" formControlName="address" placeholder="请输入居住地">
+                  </nz-form-control>
+                </nz-form-item>
+                <button nzTitle="居住地与户籍所在地一致" nz-tooltip class="equal" nzSize="small" (click)="equalAddr(i)" nz-button
+                  nzType="primary" nzShape="circle"><i nz-icon type="swap" theme="outline"></i></button>
+              </nz-col>
+              <nz-col nzSpan="12">
+                <nz-form-item nzFlex>
+                  <nz-form-label nzSpan="8">户籍所在地</nz-form-label>
+                  <nz-form-control nzSpan="16">
+                    <input nz-input name="birthplace" formControlName="birthplace" placeholder="请输入户籍所在地">
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSpan="12">
+                <nz-form-item nzFlex>
+                  <nz-form-label [nzRequired]="true" nzSpan="8">联系电话</nz-form-label>
+                  <nz-form-control nzSpan="16">
+                    <input nz-input name="phone" formControlName="phone" placeholder="请输入联系电话">
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSpan="12">
+                <nz-form-item nzFlex>
+                  <nz-form-label [nzRequired]="true" nzSpan='8'>角色</nz-form-label>
+                  <nz-form-control nzSpan='16'>
+                    <nz-select style='width: 100%' formControlName='role' [attr.id]='""' [nzPlaceHolder]='"请选择"'
+                      nzAllowClear>
+                      <nz-option *ngFor='let item of roleOpts' [nzLabel]='item.name' [nzValue]='item.val'></nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSpan="12">
+                <nz-form-item nzFlex>
+                  <nz-form-label nzSpan='8'>是否重点关注</nz-form-label>
+                  <nz-form-control nzSpan='16'>
+                    <nz-select style='width: 100%' formControlName='isFocus' (click)="getDict()" [attr.id]='""'
+                      [nzPlaceHolder]='"请选择"' nzAllowClear>
+                      <nz-option *ngFor='let item of focusOpts' [nzLabel]='item.name' [nzValue]='item.val'></nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSpan="12">
+                <nz-form-item nzFlex>
+                  <nz-form-label nzSpan='8'>是否是代表人</nz-form-label>
+                  <nz-form-control nzSpan='16'>
+                    <nz-select style='width: 100%' formControlName='isRepresentative' [nzPlaceHolder]='"请选择"'
+                      nzAllowClear>
+                      <nz-option *ngFor='let item of focusOpts' [nzLabel]='item.name' [nzValue]='item.val'></nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSpan="12">
+                <nz-form-item nzFlex>
+                  <nz-form-label nzSpan='8'>涉及金额</nz-form-label>
+                  <nz-form-control nzSpan='16'>
+                    <input nz-input name="amount" formControlName="amount" placeholder="请输入涉及金额">
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSpan="12" style="opacity: 0; filter:alpha(opacity=0);-moz-opacity:0;-khtml-opacity: 0;  ">
+                <nz-form-item nzFlex>
+                  <nz-form-label nzSpan="8"></nz-form-label>
+                  <nz-form-control nzSpan="16">
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSpan="12">
+                <nz-form-item nzFlex>
+                  <nz-form-label nzSpan="8">身份证照片</nz-form-label>
+                  <nz-form-control nzSpan="16">
+                    <div class="photo-box">
+                      <img [src]="url+postForm.value.workComplains[i].idPhoto" alt="" *ngIf="postForm.value.workComplains[i].idPhoto"
+                        style="width:102px;height:126px;" class="photo-img3">
+                      <img src="assets/image/photo.png" alt="" *ngIf="!postForm.value.workComplains[i].idPhoto" class="photo-img">
+                    </div>
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSpan="12">
+                <nz-form-item nzFlex>
+                  <nz-form-label nzSpan="8">现场拍照</nz-form-label>
+                  <nz-form-control nzSpan="16">
+                    <div class="photo-box" (click)="takePhoto(i)">
+                      <img [src]="downLoadUrl+postForm.value.workComplains[i].cameraPhoto" alt="" *ngIf="postForm.value.workComplains[i].cameraPhoto&&postForm.value.workComplains[i].cameraPhoto.indexOf('http://img.ys7.com') == -1"
+                        class="photo-img2">
+                      <img [src]="postForm.value.workComplains[i].cameraPhoto" alt="" *ngIf="postForm.value.workComplains[i].cameraPhoto&&postForm.value.workComplains[i].cameraPhoto.indexOf('http://img.ys7.com') != -1"
+                        class="photo-img2">
+                      <img src="assets/image/photo.png" alt="" *ngIf="!postForm.value.workComplains[i].cameraPhoto"
+                        class="photo-img">
+                      <img src="assets/image/tianjia.png" alt="" *ngIf="!postForm.value.workComplains[i].cameraPhoto"
+                        class="add-icon">
+                    </div>
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+            </nz-row>
+            <nz-row class="addbtn" *ngIf="!isRead">
+              <nz-col nzSpan="8" nzOffset="8">
+                <button nz-button nzType="primary" (click)="addWorkRecord()" nzBlock>新增投诉人</button>
+              </nz-col>
+            </nz-row>
+          </div>
+
+          <!-- 地点 -->
+          <nz-col nzSpan="12" *ngIf="formLabel?.workPlace?.visible == 1">
+            <nz-form-item nzFlex>
+              <nz-form-label [nzRequired]="formLabel.workPlace.necessity == 1" nzSpan="8">{{formLabel.workPlace.desc}}</nz-form-label>
+              <nz-form-control nzSpan="16">
+                <input nz-input formControlName="workPlace" placeholder="请输入地点">
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+          <!-- 主题 -->
+          <nz-col nzSpan="24" *ngIf="formLabel?.summary?.visible == 1">
+            <nz-form-item nzFlex>
+              <nz-form-label [nzRequired]="formLabel.summary.necessity == 1" nzSpan="4">{{formLabel.summary.desc}}</nz-form-label>
+              <nz-form-control nzSpan="20">
+                <textarea nz-input formControlName="summary" placeholder=""></textarea>
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+          <!-- 内容 -->
+          <nz-col nzSpan="24" *ngIf="formLabel?.achievement?.visible == 1">
+            <nz-form-item nzFlex>
+              <nz-form-label [nzRequired]="formLabel.achievement.necessity == 1" nzSpan="4">{{formLabel?.achievement.desc}}</nz-form-label>
+              <nz-form-control style="z-index: 0" nzSpan="20">
+                <div #ed></div>
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+          <!-- 备注 -->
+          <nz-col nzSpan="24" *ngIf="formLabel?.remark?.visible == 1">
+            <nz-form-item nzFlex>
+              <nz-form-label nzSpan="4">{{formLabel.remark.desc}}</nz-form-label>
+              <nz-form-control style="z-index: 0" nzSpan="20">
+                <textarea rows="4" nz-input formControlName="remark"></textarea>
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+          <!-- 附件 -->
+          <nz-col nzSpan="24" *ngIf="itemType != 'GovDLWorkType6'">
+            <nz-form-item nzFlex>
+              <nz-form-label nzSpan="4">附件</nz-form-label>
+              <nz-form-control nzSpan="20">
+                <nz-upload class="upload-list-inline" [nzAction]="uploadUrl" (nzChange)="upload($event)" [nzDisabled]="isRead == 'false'"
+                  [nzRemove]="delFile" [(nzFileList)]="fileList">
+                  <button nz-button>
+                    <span><i nz-icon type="upload"></i> 上传</span>
+                  </button>
+                </nz-upload>
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+          <!-- 公示 -->
+          <!-- *ngIf="itemType == 'GovDLWorkType6'" -->
+          <nz-col nzSpan="24" *ngIf="formLabel?.publicity_status?.visible == 1">
+            <nz-form-item nzFlex>
+              <nz-form-label nzSpan="4" [nzRequired]="formLabel.publicity_status.necessity == 1">{{formLabel.publicity_status.desc}}</nz-form-label>
+              <nz-form-control style="z-index: 0" nzSpan="20">
+                <nz-radio-group formControlName="publicityStatus">
+                  <label nz-radio [nzValue]="1">是</label>
+                  <label nz-radio [nzValue]="0">否</label>
+                </nz-radio-group>
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+        </nz-row>
+
+      </nz-col>
+    </form>
+    <!-- 工作组表格 -->
+    <nz-col class="table-list" nzSpan="10" *ngIf="itemType != 'GovDLWorkType6'">
+      <nz-row nzGutter="24" style="padding: 0 25px;">
+        <nz-table #nzTable1 nzSize="small" [nzShowPagination]="false" [nzData]="list1" [nzPageSize]="10" [nzScroll]="{ y: '240px' }">
+          <thead>
+            <tr>
+              <th class="table-head" colspan="3">政府工作组</th>
+            </tr>
+            <tr>
+              <th width="130">姓名</th>
+              <th width="130">职务</th>
+              <th>联系方式</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let i of nzTable1.data">
+              <td width="130">{{i.name}}</td>
+              <td width="130">{{i.job}}</td>
+              <td>{{i.contact}}</td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </nz-row>
+      <nz-row style="margin-top: 30px;padding: 0 25px;" nzGutter="24">
+        <nz-table #nzTable2 nzSize="small" [nzShowPagination]="false" [nzData]="list2" [nzPageSize]="10" [nzScroll]="{ y: '240px' }">
+          <thead>
+            <tr>
+              <th class="table-head" colspan="3">企业工作组</th>
+            </tr>
+            <tr>
+              <th width="130">姓名</th>
+              <th width="130">职务</th>
+              <th>联系方式</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let i of nzTable2.data">
+              <td width="130">{{i.name}}</td>
+              <td width="130">{{i.job}}</td>
+              <td>{{i.contact}}</td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </nz-row>
+    </nz-col>
+  </nz-row>
+  <nz-row nzGutter="8" style="text-align: center;">
+    <button nz-button (click)="goBack()">返回</button>
+    <button (click)="submit()" *ngIf="!recordId" nz-button nzType="primary">保存</button>
+    <button (click)="change()" *ngIf="!!recordId && isRead == 'true'" nz-button nzType="primary">修改</button>
+  </nz-row>
+  <ng-template #readcard>
+    此功能需配合读卡器。<a target="_blank" href="https://jinguantong.com.cn/bj/hd/online/upload-file/download/Z3JvdXAxL00wMC8wMS8yNC9DZ0h1RkZ3aDJ2R0FXcVVtQU54VEVDM0lNTm84NzIuemlw">(驱动下载)</a>
+    <br>联系客服：<a>010-87411477</a>
+  </ng-template>
+  <div class="nz-tips" *ngIf="isSpinning">
+    <nz-spin nzTip='拍照中...' [nzSpinning]="isSpinning" [nzSize]="large"></nz-spin>
+  </div>
+</div>

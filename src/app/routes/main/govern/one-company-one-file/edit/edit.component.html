@@ -1,0 +1,152 @@
+<div class="c-content-inner">
+  <nz-col>
+    <form class="editForm" nz-form [formGroup]="editForm">
+      <div style="width:50%;margin:0 auto;">
+        <nz-row nzMd="6" message>
+          <nz-col nzMd="12">
+            <nz-form-item nzFlex>
+              <nz-form-label nzMd="8" >编号</nz-form-label>
+              <nz-form-control nzMd="12">
+                <nz-col>
+                  <input nz-input formControlName="number">
+                </nz-col>
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+          <nz-col nzMd="12" >
+            <nz-form-item nzFlex>
+              <nz-form-label nzMd="6" >经营状态</nz-form-label>
+              <nz-form-control nzMd="12">
+                <nz-select style="width: 100%" formControlName="businessSituation" 
+                  [nzPlaceHolder]="'请选择'" nzAllowClear >
+                  <nz-option *ngFor="let item of FbusinessSituation" [nzLabel]="item.name" [nzValue]="item.id">
+                  </nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+        </nz-row>
+      </div>
+      <div style="width:50%;margin:0 auto;">
+        <nz-row nzMd="6" message>
+        <nz-col nzMd="12">
+          <nz-form-item nzFlex>
+            <nz-form-label nzMd="8" >通知书批次</nz-form-label>
+            <nz-form-control nzMd="12">
+              <nz-select style="width: 100%" formControlName="batch"  [nzPlaceHolder]="'请选择'"
+                nzAllowClear >
+                <nz-option *ngFor="let item of Fbatch" [nzLabel]="item.name" [nzValue]="item.id">
+                </nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </nz-col>
+        <nz-col nzMd="12">
+          <nz-form-item nzFlex>
+            <nz-form-label nzMd="6" >现金贷业务</nz-form-label>
+            <nz-form-control nzMd="12">
+              <nz-select style="width: 100%;" formControlName="paydayLoan"  [nzPlaceHolder]="'请选择'"
+                nzAllowClear>
+                <nz-option *ngFor="let item of FpaydayLoan" [nzLabel]="item.name" [nzValue]="item.id">
+                </nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </nz-col>
+      </nz-row>
+      </div>
+      <div style="width:50%;margin:0 auto;">
+          <nz-row nzMd="6" message>
+        <nz-col nzMd="12">
+          <nz-form-item nzFlex>
+            <nz-form-label nzMd="8" >工作进展</nz-form-label>
+            <nz-form-control nzMd="12">
+              <nz-select style="width: 100%" formControlName="workProgress"  [nzPlaceHolder]="'请选择'"
+                nzAllowClear>
+                <nz-option *ngFor="let item of FworkProgress" [nzLabel]="item.name" [nzValue]="item.id">
+                </nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </nz-col>
+        <nz-col nzMd="12">
+          <nz-form-item nzFlex>
+            <nz-form-label nzMd="6">整改状态</nz-form-label>
+            <nz-form-control nzMd="12">
+              <nz-select style="width: 100%" formControlName="rectificationStatus" 
+                [nzPlaceHolder]="'请选择'" nzAllowClear>
+                <nz-option *ngFor="let item of FrectificationStatus" [nzLabel]="item.name" [nzValue]="item.id">
+                </nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </nz-col>
+      </nz-row>
+    </div>
+      <div style="width:50%;margin:0 auto;">
+          <nz-row nzMd="6" message>
+        <nz-col nzMd="12">
+          <nz-form-item nzFlex>
+            <nz-form-label nzMd="8">自行聘请专业机构</nz-form-label>
+            <nz-form-control nzMd="12">
+              <nz-select style="width: 100%" formControlName="selfHireProfessional" 
+                [nzPlaceHolder]="'请选择'" nzAllowClear>
+                <nz-option *ngFor="let item of FselfHireProfessional" [nzLabel]="item.name" [nzValue]="item.id">
+                </nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </nz-col>
+        <nz-col nzMd="12">
+          <nz-form-item nzFlex>
+            <nz-form-label nzMd="6" >分类处置</nz-form-label>
+            <nz-form-control nzMd="12">
+              <nz-select style="width: 100%" formControlName="classificationDisposal" 
+                [nzPlaceHolder]="'请选择'" nzAllowClear>
+                <nz-option *ngFor="let item of FclassificationDisposal" [nzLabel]="item.name" [nzValue]="item.id">
+                </nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </nz-col>
+      </nz-row>
+    </div>
+    <div style="width:50%;margin:0 auto;">
+      <nz-row nzMd="6" message>
+      <nz-col nzMd="12">
+        <nz-form-item nzFlex>
+          <nz-form-label nzMd="8" >检查状态</nz-form-label>
+          <nz-form-control nzMd="12">
+            <nz-select style="width: 100%" formControlName="checkType"  [nzPlaceHolder]="'请选择'"
+              nzAllowClear >
+              <nz-option *ngFor="let item of workType" [nzLabel]="item.name" [nzValue]="item.id">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+    </nz-row>
+    </div>
+    <div style="width:50%;margin:0 auto;" style="text-align: center">
+        <button nz-button [nzType]="'primary'"   style="margin-right:5px" (click)="goBack()">
+          <span>返回</span>
+        </button>
+        <button nz-button [nzType]="'primary'"  (click)="_save(editForm.value)"  (keyup.enter)="_save(editForm.value)">
+            <span>保存</span>
+        </button>
+  </div>
+    </form>
+  </nz-col>
+  <div class="row bottomGap">
+      <div class="col-md-6 center" style="padding-right:0;">
+        <label for="" style="width:100%;">
+          <h3 style="text-align: center;">变更记录</h3>
+          <div class="center" style="padding:20px;min-height:300px; border:1px solid #ccc;overflow:auto;margin-top: 15px;">
+            <p *ngFor="let item of records; let i=index" style="text-align:left;width:100%;">{{i+1}}.&nbsp;{{item}}</p>
+          </div>
+        </label>
+      </div>
+    </div>
+
+
+</div>

@@ -1,0 +1,6 @@
+{
+   "/upload-file": {
+      "target": "http://172.16.234.174:8111/upload-file/uploadAppendAndConvert",
+      "secure": false
+   }
+}

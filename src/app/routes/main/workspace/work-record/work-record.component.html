@@ -1,0 +1,130 @@
+<div>
+  <form class="SearchForm" nz-form [formGroup]="searchForm">
+    <nz-row>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9" [nzFor]="'summary'">主题</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <input nz-input formControlName="summary" placeholder="请输入主题">
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9" [nzFor]="'local'">地点</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <input nz-input formControlName="local" placeholder="请输入地点">
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9" [nzFor]="'person'">参与人</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <input nz-input formControlName="person" placeholder="请输入参与人">
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9" [nzFor]="'dataRange'">日期范围</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-range-picker style="width: 100%;" formControlName="dataRange" nzPlaceHolder="请选择日期范围"></nz-range-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <!-- <nz-col nzMd="6" nzLg="8" nzXl="6">
+          <nz-form-item nzFlex>
+            <nz-form-label nzSpan="9" [nzFor]="'type'">类型</nz-form-label>
+            <nz-form-control nzSpan="15">
+              <nz-select style="width: 100%" formControlName="type" [attr.id]="'type'" [nzPlaceHolder]="'请选择'"
+                nzAllowClear>
+                <nz-option *ngFor="let item of searchType" [nzLabel]="item.name" [nzValue]="item.value">
+                </nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </nz-col> -->
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9" [nzFor]="'companyName'">企业</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <input nz-input formControlName="companyName" placeholder="请输入企业">
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzLg="8" nzXl="6" *ngIf="VIP == 1">
+          <nz-form-item nzFlex>
+            <nz-form-label nzSpan="9" [nzFor]="'showAll'">只看本人</nz-form-label>
+            <nz-form-control nzSpan="15">
+              <nz-switch formControlName="showAll" nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch>
+            </nz-form-control>
+          </nz-form-item>
+        </nz-col>
+    </nz-row>
+    <nz-row>
+      <nz-col nzSpan="4">
+        <button nz-button type="button" [nzType]="'primary'" [routerLink]="[ './detail', {type:listType,dlType:DLtype} ]">
+          <i nz-icon type="plus-circle" theme="outline"></i>
+          <span>新建</span>
+        </button>
+      </nz-col>
+      <nz-col class="but-group" nzSpan="20">
+        <button nz-button [nzType]="'primary'" (click)="getList()" (keyup.enter)="getList()">
+          <i class="anticon anticon-search"></i>
+          <span>查询</span>
+        </button>
+        <button nz-button [nzType]="'primary'" (click)="resetForm()">
+          <i class="anticon anticon-reload"></i>
+          <span>重置</span>
+        </button>
+      </nz-col>
+
+    </nz-row>
+  </form>
+  <nz-table #rowSelectionTable [nzData]="data"
+    (nzPageIndexChange)="changePage($event)" [nzTotal]="total" [(nzPageIndex)]="pageIndex" [(nzPageSize)]="pageSize"
+    [nzFrontPagination]="false" >
+    <thead>
+      <tr>
+        <th>序号</th>
+        <th>类型</th>
+        <th>日期</th>
+        <th>企业</th>
+        <th>主题</th>
+        <th>参与人</th>
+        <th>地点</th>
+        <th>填报人</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of rowSelectionTable.data;let i = index;">
+        <td>{{i+1}}</td>
+        <td>{{data.dictType?.name}}</td>
+        <td>{{data.recordDate | date:'y-MM-dd'}}</td>
+        <td>{{data.enterName}}</td>
+        <td>{{data.summary}}</td>
+        <td>{{data.participator || data.primaryParticipator}}</td>
+        <td>{{data.workPlace}}</td>
+        <td>{{data.operatorName}}</td>
+        <td>
+          <nz-dropdown>
+            <button nz-button nz-dropdown nzType="primary"><span>操作</span></button>
+            <ul nz-menu>
+              <li nz-menu-item *ngIf="data.operatorId === userId">
+                <a [routerLink]="[ './detail', {id:data.id, read: true,type:listType,dlType:DLtype} ]">编辑</a>
+              </li>
+              <li nz-menu-item>
+                <a [routerLink]="[ './detail', {id:data.id,read: false,type:listType,dlType:DLtype} ]">查看</a>
+              </li>
+              <li nz-menu-item *ngIf="data.operatorId === userId">
+                <a (click)="delRecordItem(data.id)">删除</a>
+              </li>
+            </ul>
+          </nz-dropdown>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>

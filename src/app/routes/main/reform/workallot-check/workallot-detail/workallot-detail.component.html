@@ -1,0 +1,336 @@
+<div class="SearchForm">
+  <p class="c-line-title myTitle">档案详情</p>
+  <nz-row class="but-group">
+    <button nz-button [nzType]="'primary'" (click)="goBack()">
+      <i class="anticon anticon-rollback"></i>
+      <span>返回</span>
+    </button>
+  </nz-row>
+  <nz-row>
+    <nz-col>
+      <button nz-button [nzType]="'primary'" [ngStyle]="{'background-color':btn_type === data.sort ? '#002255' : 'rgba(39, 87, 158, 0.8)' }"
+        (click)='tabClick(data.sort)'  *ngFor='let data of tabList' style="width: 25%; height:50px;margin-left:0!important;">
+        <span>{{data.name}}</span>
+      </button>
+    </nz-col>
+  </nz-row>
+  <nz-row style="margin-top:20px;">
+    <p>
+      <span>公司名称：</span>
+      <span>{{baseIns.name}}</span>
+    </p>
+    <p>
+      <span>注册地址：</span>
+      <span>{{baseIns.address}}</span>
+    </p>
+    <!-- <p *ngIf="btn_type=== '4'">
+      <a [href]="BI_IP+'/bi?name=entinfo.frm&sign='
+      + sessionStorage.getItem('token') + '&userId='+baseIns.enterpriseId" target="_blank">一企一档</a>
+    </p> -->
+    <p *ngIf="btn_type=== '2'||btn_type=== '3'">
+      <span>企业审查联络人电话：</span>
+      <span></span>
+    </p>
+    <p *ngIf="btn_type=== '2'||btn_type=== '3'">
+      <span>系统操作人联系电话：</span>
+      <span></span>
+    </p>
+  </nz-row>
+  <nz-row style="margin-bottom:30px;">
+    <nz-col nzSpan="24">
+      <button *ngIf="flag0" nz-button [nzType]="'primary'" (click)="btnClick('0')"
+        [ngStyle]="{'opacity':btn_type2 === 0 ? '0.8' : '1' }">
+        <span>受理申请书</span>
+      </button>
+      <button nz-button [nzType]="'primary'" (click)="btnClick('1')" [ngStyle]="{'opacity':btn_type2 === 1 ? '0.8' : '1' }">
+        <span>资料清单核查</span>
+      </button>
+      <button nz-button [nzType]="'primary'" (click)="btnClick('2')" [ngStyle]="{'opacity':btn_type2 === 2 ? '0.8' : '1' }">
+        <span>合规项核查</span>
+      </button>
+    </nz-col>
+  </nz-row>
+
+  <!-- 受理申请书表 -->
+  <div *ngIf="flag0">
+      <nz-row *ngIf="btn_type2==0">
+          <nz-table #nzTable0 [nzData]="applyList" [nzShowPagination]="false">
+            <thead>
+              <tr>
+                <th>序号</th>
+                <th>文件列表</th>
+                <th>文件数量</th>
+                <th>上传时间</th>
+                <th>补充材料数量</th>
+                <th>上传时间</th>
+                <th *ngIf="btn_type=== '1'">审核备注</th>
+                <th *ngIf="btn_type=== '1'">材料是否完备</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of nzTable0.data;let i = index;">
+                <td>{{i+1}}</td>
+                <td>{{item.res1}}</td>
+                <td style="color: #20a8d8;cursor: pointer;text-decoration: underline;" class="right" (click)='checkAlert(item.dictId,item.enterpriseMsgId,"before")'>
+                  <p>{{item.res0}}</p>
+                </td>
+                <td class="right">{{item.createTime| date:'yyyy-MM-dd '}}</td>
+                <td style="color: #20a8d8;cursor: pointer;text-decoration: underline;" class="right" (click)='checkAlert(item.dictId,item.enterpriseMsgId,"before")'>
+                  <p>{{item.supplementNumber}}</p>
+      
+                </td>
+                <td class="right">{{item.supplementTime| date:'yyyy-MM-dd '}}</td>
+                <td *ngIf="btn_type=== '1'">{{item.firstTrialRemark}}</td>
+                <td *ngIf="btn_type=== '1'">
+                  <label class="radio-inline">
+                    <input type="radio" (click)="ApplyCheck(item.dictId,'1')" [checked]="item.status=='1'" value="1" [name]="item.dictId"
+                      disabled='this.detailFlag=="1"'>&nbsp;&nbsp;是
+                  </label>
+                  <label class="radio-inline">
+                    <input type="radio" (click)="ApplyCheck(item.dictId,'0')" value="0" [checked]="item.status=='0'" [name]="item.dictId"
+                      disabled='this.detailFlag=="1"'>&nbsp;&nbsp;否
+                  </label>
+                  <label for="" style="color:#909cfe;" (click)='remark(item.dictId,item.id,item.firstTrialRemark)'>备注</label>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </nz-row>
+  </div>
+  
+  <!-- 资料清单核查 -->
+  <nz-row *ngIf="btn_type2==1">
+    <nz-col>
+      <nz-tabset [nzTabPosition]="'top'" [nzType]="'card'">
+        <nz-tab *ngFor="let item of tabsList" [nzTitle]="item.name" (nzSelect)="tabSelect(item.val)">
+          <nz-table #nzTable1 [nzData]="lists" [nzShowPagination]="false" [nzPageSize]="100000">
+            <thead>
+              <tr>
+                <th nzWidth="65px">序号</th>
+                <th>文件列表</th>
+                <th nzWidth="65px">附件</th>
+                <th nzWidth="120px">上传时间</th>
+                <th>备注</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of nzTable1.data;let i = index;">
+                <td>{{i+1}}</td>
+                <td>
+                  <p style="text-align:left;" [innerHTML]="item.res1"></p>
+                </td>
+                <td class="right" (click)='checkAlert(item.dictId,item.enterpriseMsgId,"before")'>
+                  <a style="color:#20a8d8;cursor:pointer;text-decoration:underline">{{item.res0}}</a>
+                </td>
+                <td class="right">{{item.createTime| date:'yyyy-MM-dd '}}</td>
+                <td style="width: 500px;">
+                  <p style="overflow: hidden; text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2; text-align: left;-webkit-box-orient: vertical;width: 400px;"
+                    [title]="item.remark">{{item.remark}}</p>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </nz-tab>
+      </nz-tabset>
+    </nz-col>
+  </nz-row>
+
+  <!-- 108项核查 -->
+  <div *ngIf="btn_type2==2">
+    <nz-table *ngIf="flag6" #nzTable [nzData]="datas" [nzShowPagination]="false" [nzPageSize]="1000" [nzScroll]="{ y: '600px' }">
+      <thead>
+        <tr>
+          <th nzWidth="30%">审查项目及要求</th>
+          <th nzWidth="10%">审查结果</th>
+          <th nzWidth="15%">备注</th>
+          <!-- 判断是否为政府 -->
+          <th *ngIf="flag2&&btn_type=== '4'">协会结果</th>
+          <th *ngIf="flag2&&btn_type=== '4'">协会备注</th>
+          <th *ngIf="flag3&&btn_type=== '4'">律所结果</th>
+          <th *ngIf="flag3&&btn_type=== '4'">律所备注</th>
+          <th *ngIf="flag4&&btn_type=== '4'">会所结果</th>
+          <th *ngIf="flag4&&btn_type=== '4'">会所备注</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of nzTable.data; let i=index;">
+          <td class='bold' [class.sel]="item.dictId=='test01'">
+            <span>{{item.res0}}</span>
+          </td>
+          <td *ngIf="btn_type=== '4'">
+            <label>
+              <input type="radio" [name]="item.dictId" disabled="this.detailFlag=='1'" [checked]="item.govVerificationCase=='0'"
+                value="0"> <i [ngClass]="{'icon-color1': item.govVerificationCase=='0'}" class="iconfont icon-gou icon-color"></i>
+            </label>
+            <label>
+              <input type="radio" [name]="item.dictId" disabled="this.detailFlag=='1'" [checked]="item.govVerificationCase=='1'"
+                value="1"> <i class="iconfont icon-chacha icon-color" [ngClass]="{'icon-color2': item.govVerificationCase=='1'}"></i>
+            </label>
+          </td>
+          <td *ngIf="btn_type=== '1'">
+            <label>
+              <input type="radio" [name]="item.dictId" disabled="this.detailFlag=='1'" [checked]="item.firstVerificationCase=='0'"
+                value="0"> <i [ngClass]="{'icon-color1': item.firstVerificationCase=='0'}" class="iconfont icon-gou icon-color"></i>
+            </label>
+            <label>
+              <input type="radio" [name]="item.dictId" disabled="this.detailFlag=='1'" [checked]="item.firstVerificationCase=='1'"
+                value="1"> <i class="iconfont icon-chacha icon-color" [ngClass]="{'icon-color2': item.firstVerificationCase=='1'}"></i>
+            </label>
+          </td>
+          <td *ngIf="btn_type=== '2'">
+            <label>
+              <input type="radio" [name]="item.dictId" disabled="this.detailFlag=='1'" [checked]="item.lawyerVerificationCase=='0'"
+                value="0"> <i [ngClass]="{'icon-color1': item.lawyerVerificationCase=='0'}" class="iconfont icon-gou icon-color"></i>
+            </label>
+            <label>
+              <input type="radio" [name]="item.dictId" disabled="this.detailFlag=='1'" [checked]="item.lawyerVerificationCase=='1'"
+                value="1"> <i class="iconfont icon-chacha icon-color" [ngClass]="{'icon-color2': item.lawyerVerificationCase=='1'}"></i>
+            </label>
+          </td>
+          <td *ngIf="btn_type=== '3'">
+            <label>
+              <input type="radio" [name]="item.dictId" disabled="this.detailFlag=='1'" [checked]="item.accountVerificationCase=='0'"
+                value="0"> <i [ngClass]="{'icon-color1': item.accountVerificationCase=='0'}" class="iconfont icon-gou icon-color"></i>
+            </label>
+            <label>
+              <input type="radio" [name]="item.dictId" disabled="this.detailFlag=='1'" [checked]="item.accountVerificationCase=='1'"
+                value="1"> <i class="iconfont icon-chacha icon-color" [ngClass]="{'icon-color2': item.accountVerificationCase=='1'}"></i>
+            </label>
+          </td>
+          <td>
+            <textarea rows="4" disabled='this.detailFlag=="1"' nz-input></textarea>
+          </td>
+          <td *ngIf="flag2&&btn_type=== '4'">
+            <i *ngIf="item.firstVerificationCase=='0'" class="iconfont  icon-color1 icon-gou"></i>
+            <i *ngIf="item.firstVerificationCase!='0'" class="iconfont  icon-color2 icon-chacha"></i>
+          </td>
+          <td *ngIf="flag2&&btn_type=== '4'">{{item.firstRemark}}</td>
+          <td *ngIf="flag3&&btn_type=== '4'">
+            <i *ngIf="item.lawyerVerificationCase=='0'" class="iconfont  icon-color1 icon-gou"></i>
+            <i *ngIf="item.lawyerVerificationCase!='0'" class="iconfont  icon-color2 icon-chacha"></i>
+          </td>
+          <td *ngIf="flag3&&btn_type=== '4'">{{item.lawyerRemark}}
+          </td>
+          <td *ngIf="flag4&&btn_type=== '4'">
+            <i *ngIf="item.accountVerificationCase=='0'" class="iconfont  icon-color1 icon-gou"></i>
+            <i *ngIf="item.accountVerificationCase!='0'" class="iconfont  icon-color2 icon-chacha"></i>
+          </td>
+          <td *ngIf="flag4&&btn_type=== '4'">{{item.accountRemark}}
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+    <nz-row style="margin-top:30px;">
+      <nz-col nzSpan="2">
+        <p>建议:</p>
+      </nz-col>
+      <nz-col nzSpan="18">
+        <textarea rows="10" disabled='this.detailFlag=="1"' nz-input> </textarea>
+      </nz-col>
+    </nz-row>
+    <nz-row style="margin-top:30px;">
+      <nz-col nzSpan="4">
+        <p *ngIf="btn_type=== '1'">报告上传：</p>
+        <p *ngIf="btn_type=== '2'">律所审核结果报告上传:</p>
+        <p *ngIf="btn_type=== '3'">会所审核结果报告上传:</p>
+        <p *ngIf="btn_type=== '4'">P2P网贷机构审查结果意见书:</p>
+      </nz-col>
+      <nz-col>
+        <button nz-button [nzType]="'primary'" (click)='fileAlerts(upTypeList1[(btn_type-1)])'>
+          <i class="anticon anticon-cloud-upload-o"></i>
+          <span>上传材料</span>
+        </button>
+        <label *ngIf="btn_type=== '2'||btn_type=== '3'" for="" style="color:red;margin-left:20px;">*请上传加盖公章且本人签字的报告</label>
+      </nz-col>
+    </nz-row>
+    <nz-row style="margin-top:30px;">
+      <nz-col nzSpan="4">
+        <p *ngIf="btn_type=== '1'">结果：</p>
+        <p *ngIf="btn_type=== '2'||btn_type=== '3'">访谈笔录上传：</p>
+        <p *ngIf="btn_type=== '4'">线上整改通知书</p>
+      </nz-col>
+      <nz-col *ngIf="btn_type=== '1'">
+        <label style="margin-right:28px;" class="radio-inline">
+          <input type="radio" [checked]="firstResult=='0'" name="result" value="0" [disabled]='this.detailFlag=="1"'>&nbsp;&nbsp;通过
+        </label>
+        <label style="margin-right:28px;" class="radio-inline">
+          <input type="radio" name="result" [checked]="firstResult=='2'" value="2" [disabled]='this.detailFlag=="1"'>&nbsp;&nbsp;初审不合格
+        </label>
+      </nz-col>
+      <nz-col *ngIf="btn_type=== '2'||btn_type=== '3'||btn_type=== '4'">
+        <button nz-button [nzType]="'primary'" (click)='fileAlerts(upTypeList2[(btn_type-2)])'>
+          <i class="anticon anticon-cloud-upload-o"></i>
+          <span>上传材料</span>
+        </button>
+      </nz-col>
+    </nz-row>
+    <nz-row nzGutter="8" class="btn-group">
+      <button nz-button nzType="default" disabled (click)="goBack()">
+        <span>保存</span>
+      </button>
+      <button nz-button nzType="default" disabled (click)="create()">
+        <span>提交</span>
+      </button>
+    </nz-row>
+  </div>
+
+  <!-- 备注内容 -->
+  <nz-modal nzWidth="700" [(nzVisible)]="isVisible" nzTitle="备注内容" (nzOnCancel)="handleOk()" (nzOnOk)="handleOk()">
+    <textarea style="width:100%;min-height:300px;" nz-input autofocus="autofocus" [(ngModel)]="old_mark" [disabled]='this.detailFlag=="1"'>
+      </textarea>
+  </nz-modal>
+
+  <!-- 预览 -->
+  <nz-modal nzWidth="700" [(nzVisible)]="isVisible2" nzTitle="文件详情" (nzOnCancel)="handleCancel1()" (nzOnOk)="handleOk1()">
+    <nz-row *ngFor="let item of file_lists;" style="margin-top:20px;">
+      <nz-col nzSpan="12" style='color:#3366FF;cursor:pointer;width:150px;overflow: hidden;
+                text-overflow:ellipsis;
+                white-space: nowrap;'
+        [title]="item.name">
+        {{item.name}}
+      </nz-col>
+      <nz-col nzSpan="6" style="margin-left:30px">
+        {{item.createTime| date:'yyyy-MM-dd '}}
+      </nz-col>
+      <nz-col nzSpan="4">
+        <!-- <button class='btn btn-primary' (click)="download(item.url,item.name)">下载</button> -->
+        <button nz-button [nzType]="'primary'" (click)="lookFile(item.url,item.name)">预览</button>
+      </nz-col>
+    </nz-row>
+  </nz-modal>
+
+  <!-- 上传 -->
+  <nz-modal nzWidth="700" [(nzVisible)]="isVisible3" nzTitle="文件详情" (nzOnCancel)="handleCancel2()" (nzOnOk)="handleOk2()">
+    <nz-upload [nzCustomRequest]="click_fileUp" [nzShowUploadList]="false">
+      <button nz-button>
+        <i class="anticon anticon-upload"></i>
+        <span>点击上传</span>
+      </button>
+      <nz-progress *ngIf="progress < 100 && progress > 0" [nzPercent]="progress" nzSize="small"></nz-progress>
+    </nz-upload>
+    <nz-row *ngFor="let item of file_lists2;" style="margin-top:20px;">
+      <nz-col nzSpan="12" style='color:#3366FF;cursor:pointer;width:150px;overflow: hidden;
+                  text-overflow:ellipsis;
+                  white-space: nowrap;'
+        [title]="item.name">
+        {{item.name}}
+      </nz-col>
+      <nz-col nzSpan="6" style="margin-left:30px">
+        {{item.createTime| date:'yyyy-MM-dd '}}
+      </nz-col>
+      <!-- <nz-col>
+        <button nz-button [nzType]="'primary'" (click)="download(item.url,item.name)">下载</button>
+      </nz-col> -->
+      <nz-col style="margin-left:30px">
+        <button nz-button [nzType]="'primary'" (click)="lookFile(item.url,item.name)">预览</button>
+      </nz-col>
+    </nz-row>
+  </nz-modal>
+
+  <!-- 图片预览 -->
+  <nz-modal nzWidth="70%" [(nzVisible)]="isSrc" nzTitle="图片预览" nzFooter=" " (nzOnCancel)="closeImg()">
+    <div style="margin:0 auto;width:80%;">
+      <img [src]="src" style="width:100%;">
+    </div>
+  </nz-modal>
+</div>

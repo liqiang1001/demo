@@ -1,0 +1,144 @@
+<div style="width:60%;margin:0 auto">
+  <form class="SearchForm" nz-form [formGroup]="postForm">
+    <!-- <nz-row>
+      <nz-col nzSpan="12">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="8">流水号</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <span>{{serialNumber}}</span>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+    </nz-row> -->
+    <nz-row style="margin-bottom:8px">
+      <nz-col nzSpan="12">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="8">企业</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <input nz-input formControlName="enterName" [placeholder]="'请输入企业名称'" (input)="onInput($event.target?.value)"
+              [nzAutocomplete]="auto">
+            <nz-autocomplete nzBackfill #auto>
+              <nz-auto-option *ngFor="let option of options" [nzValue]="option.name" (click)="selectEnt(option)">
+                {{option.name}}
+              </nz-auto-option>
+            </nz-autocomplete>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+    </nz-row>
+    <div formArrayName="complainList">
+      <nz-row class="complaList" style="margin-bottom: 10px;" *ngFor="let item of workRecord.controls;let i = index;"
+        [formGroupName]="i" nzGutter="16">
+        <div class="compla-title">
+          <h4>来访人员{{i+1}}<span class="readcard" (click)="getReadCard(i)"><img src="assets/image/readcard.png" alt=""></span>
+            <i nz-icon style="margin-left:10px;color: #FDAC41;" type="question-circle" theme="fill" nz-popover
+              [nzContent]="readcard"></i>
+          </h4>
+          <span (click)="removeItem(i)" style="cursor: pointer"><i nz-icon type="close-circle" theme="outline"></i></span>
+        </div>
+        <nz-col nzSpan="12">
+          <nz-form-item nzFlex>
+            <nz-form-label [nzRequired]="true" nzSpan="8">姓名</nz-form-label>
+            <nz-form-control nzSpan="16">
+              <input nz-input name="name" formControlName="name" placeholder="请输入投诉人姓名">
+            </nz-form-control>
+          </nz-form-item>
+        </nz-col>
+        <nz-col nzSpan="12">
+          <nz-form-item nzFlex>
+            <nz-form-label [nzRequired]="true" nzSpan="8">身份证号</nz-form-label>
+            <nz-form-control nzSpan="16">
+              <input nz-input name="idNum" formControlName="idNum" placeholder="请输入身份证号">
+            </nz-form-control>
+          </nz-form-item>
+        </nz-col>
+        <nz-col nzSpan="12">
+          <nz-form-item nzFlex>
+            <nz-form-label [nzRequired]="true" nzSpan="8">户籍所在地</nz-form-label>
+            <nz-form-control nzSpan="16">
+              <input nz-input name="birthplace" formControlName="birthplace" placeholder="请输入居住地">
+            </nz-form-control>
+          </nz-form-item>
+          <button nzTitle="居住地与户籍所在地一致" nz-tooltip class="equal" nzSize="small" (click)="equalAddr(i)" nz-button nzType="primary"
+            nzShape="circle"><i nz-icon type="swap" theme="outline"></i></button>
+        </nz-col>
+        <nz-col nzSpan="12">
+          <nz-form-item nzFlex>
+            <nz-form-label nzSpan="8">居住地</nz-form-label>
+            <nz-form-control nzSpan="16">
+              <input nz-input name="address" formControlName="address" placeholder="请输入居住地">
+            </nz-form-control>
+          </nz-form-item>
+        </nz-col>
+        <nz-col nzSpan="12">
+          <nz-form-item nzFlex>
+            <nz-form-label nzSpan="8">联系电话</nz-form-label>
+            <nz-form-control nzSpan="16">
+              <input nz-input name="phone" formControlName="phone" placeholder="请输入联系电话">
+            </nz-form-control>
+          </nz-form-item>
+        </nz-col>
+        <nz-col nzSpan="12" style="opacity: 0; filter:alpha(opacity=0);-moz-opacity:0;-khtml-opacity: 0;  ">
+          <nz-form-item nzFlex>
+            <nz-form-label nzSpan="8"></nz-form-label>
+            <nz-form-control nzSpan="16">
+            </nz-form-control>
+          </nz-form-item>
+        </nz-col>
+        <nz-col nzSpan="12" style="margin-top:10px;">
+          <nz-form-item nzFlex>
+            <nz-form-label nzSpan="8">身份证照片</nz-form-label>
+            <nz-form-control nzSpan="16">
+              <div class="photo-box">
+                <img class="photo-img3" [src]="url+postForm.value.complainList[i].idPhoto" alt="" *ngIf="postForm.value.complainList[i].idPhoto" style="width:102px;height:126px;">
+                <img src="assets/image/photo.png" alt="" *ngIf="!postForm.value.complainList[i].idPhoto" class="photo-img">
+              </div>
+            </nz-form-control>
+          </nz-form-item>
+        </nz-col>
+        <nz-col nzSpan="12" style="margin-top:10px;">
+          <nz-form-item nzFlex>
+            <nz-form-label nzSpan="8">现场拍照</nz-form-label>
+            <nz-form-control nzSpan="16">
+              <div class="photo-box" (click)="takePhoto(i)">
+                <img [src]="postForm.value.complainList[i].cameraPhoto" alt="" *ngIf="postForm.value.complainList[i].cameraPhoto" class="photo-img2">
+                <img src="assets/image/photo.png" alt="" *ngIf="!postForm.value.complainList[i].cameraPhoto" class="photo-img">
+                <img src="assets/image/tianjia.png" alt="" *ngIf="!postForm.value.complainList[i].cameraPhoto" class="add-icon">
+              </div>
+            </nz-form-control>
+          </nz-form-item>
+        </nz-col>
+      </nz-row>
+      <nz-row class="addbtn" style="margin-top:15px;">
+        <nz-col nzSpan="8" nzOffset="8">
+          <button nz-button nzType="defalut" (click)="addWorkRecord()" nzBlock style="background:rgba(244,244,244,1);
+          border:1px solid rgba(238,238,238,1);
+          border-radius:2px;">
+            <i nz-icon type="plus" theme="outline"></i>
+            新增被约谈人</button>
+        </nz-col>
+      </nz-row>
+      <nz-row class="addbtn" style="margin-top:15px;">
+        <nz-col nzSpan="8" nzOffset="8">
+          <button nz-button nzType="primary" (click)="submit()" nzBlock>
+            投诉上访</button>
+        </nz-col>
+      </nz-row>
+    </div>
+  </form>
+  <ng-template #readcard>
+    此功能需配合读卡器。<a target="_blank" href="https://jinguantong.com.cn/bj/hd/online/upload-file/download/Z3JvdXAxL00wMC8wMS8yNC9DZ0h1RkZ3aDJ2R0FXcVVtQU54VEVDM0lNTm84NzIuemlw">(驱动下载)</a>
+    <br>联系客服：<a>010-87411477</a>
+  </ng-template>
+</div>
+
+<!-- 拍照预览
+<nz-modal nzWidth="700" [(nzVisible)]="isVisible" nzTitle="拍照预览" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <nz-row style="display: flex;align-items: center;">
+    <nz-col nzSpan="24">
+      <div style="width:80%;height:auto;margin:0 auto;text-align: center" *ngIf="imgurl">
+        <img [src]="imgurl" style="width:100%;margin:0 auto;">
+      </div>
+    </nz-col>
+  </nz-row>
+</nz-modal> -->

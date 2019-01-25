@@ -1,0 +1,175 @@
+<div>
+  <form class="SearchForm" nz-form [formGroup]="searchForm">
+    <nz-row>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9">企业名称</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-col>
+              <input nz-input formControlName="enterpriseName">
+            </nz-col>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9">是否收到整改通知</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-select style="width: 100%" formControlName="isRectifyInform" [nzPlaceHolder]="'请选择'" nzAllowClear
+              (ngModelChange)="getDistricts($event)">
+              <nz-option *ngFor="let item of optionArr" [nzLabel]="item.name" [nzValue]="item.id">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9">省</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-select style="width: 100%" formControlName="provinceId" [nzPlaceHolder]="'请选择'" nzAllowClear
+              (ngModelChange)="getCitys($event)">
+              <nz-option *ngFor="let item of provinces" [nzLabel]="item.name" [nzValue]="item.id">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9">市</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-select style="width: 100%" formControlName="cityId" [attr.id]="'cityId'" [nzPlaceHolder]="'请选择'"
+              nzAllowClear (ngModelChange)="getDistricts($event)">
+              <nz-option *ngFor="let item of citys" [nzLabel]="item.name" [nzValue]="item.id">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9">区</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-select style="width: 100%" formControlName="districtId" [attr.id]="'districtId'" [nzPlaceHolder]="'请选择'"
+              nzAllowClear>
+              <nz-option *ngFor="let item of districts" [nzLabel]="item.name" [nzValue]="item.id">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9">企业类型(可复选)</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-select style="width: 100%;" [nzMode]="'multiple'" [nzPlaceHolder]="'请选择'" formControlName="enterpriseType"
+              nzAllowClear>
+              <nz-option *ngFor="let item of conpanyNameData" [nzLabel]="item.name" [nzValue]="item.id">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9">申请开始时间</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-row>
+              <nz-col nzSpan="12" style="padding-right:10px;">
+                <nz-date-picker [nzPlaceHolder]="'开始日期'"  formControlName="minTime"></nz-date-picker>
+              </nz-col>
+              <nz-col nzSpan="12" style="padding-left:10px;">
+                <nz-date-picker [nzPlaceHolder]="'结束日期'"  formControlName="maxTime"></nz-date-picker>
+              </nz-col>
+            </nz-row>
+
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9">编号范围</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-col nzSpan="11">
+              <input nz-input formControlName="numberMix">
+            </nz-col>
+            <nz-col nzSpan="2" style="text-align: center">
+              ~
+            </nz-col>
+            <nz-col nzSpan="11">
+              <input nz-input formControlName="numberMax">
+            </nz-col>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+
+
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9">来源</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-select style="width: 100%" formControlName="source" [nzPlaceHolder]="'请选择'" nzAllowClear>
+              <nz-option *ngFor="let item of sourceNames" [nzLabel]="item.name" [nzValue]="item.id">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+    </nz-row>
+    <nz-row class="but-group" style="margin-top:20px">
+      <button nz-button [nzType]="'primary'" (click)="getDataList(searchForm.value)" (keyup.enter)="getDataList(searchForm.value)">
+        <i class="anticon anticon-search"></i>
+        <span>查询</span>
+      </button>
+      <button nz-button [nzType]="'primary'" (click)="resetForm()">
+        <i class="anticon anticon-reload"></i>
+        <span>重置条件</span>
+      </button>
+      <button nz-button [nzType]="'primary'" (click)="outFile(searchForm.value)" (keyup.enter)="outFile(searchForm.value)" *ngIf="menuList[0].show">
+        <i class="anticon anticon-download"></i>
+        <span>导出</span>
+      </button>
+    </nz-row>
+  </form>
+
+  <nz-table #nzTable [nzData]="tableList" (nzCurrentPageDataChange)="currentPageDataChange($event)" [nzTotal]="total"
+    (nzPageIndexChange)="refreshStatus($event)" [nzFrontPagination]="false" [(nzPageIndex)]="pageIndex" [(nzPageSize)]="pageSize"
+    >
+    <thead>
+      <tr>
+        <th *ngFor="let item of tabList">{{item}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of nzTable.data;let i = index;">
+        <td>{{i+1}}</td>
+        <td>{{data.sysEnterprise.name}}</td>
+        <td *ngIf="data.isRectifyInform==0">无</td>
+        <td *ngIf="data.isRectifyInform==1">有</td>
+        <td *ngIf="data.isRectifyInform!=0 && data.isRectifyInform!=1"></td>
+        <td>{{data.website}}</td>
+        <td>{{data.lgmc_rsv_00}}</td>
+        <td>{{data.lgmc_rsv_01}}</td>
+        <td *ngIf="data.riskValue==0">
+          <div class="riskValue-div riskValue-div-0"></div>
+        </td>
+        <td *ngIf="data.riskValue==1">
+          <div class="riskValue-div riskValue-div-1"></div>
+        </td>
+        <td *ngIf="data.riskValue==2">
+          <div class="riskValue-div riskValue-div-2"></div>
+        </td>
+        <td *ngIf="data.riskValue!=2 && data.riskValue!=0 && data.riskValue!=1"></td>
+        <td nz-td *ngIf="menuList[1].show">
+          <nz-dropdown>
+            <button nz-button nzType="primary" nz-dropdown><span>操作</span><i class="anticon anticon-down"></i></button>
+            <ul nz-menu>
+              <li nz-menu-item style="text-align: center;" (click)="goDetail(data.id)">详情</li>
+            </ul>
+          </nz-dropdown>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>

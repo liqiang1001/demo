@@ -1,0 +1,30 @@
+<div class="container">
+ 
+  <div class="logo">
+    <img src="assets/image/login-logo.png" alt="">
+    <div class="logo-bar"></div>
+    <div class="logo-title">
+      <h3>深耕金融监管</h3>
+      <h3>助力智能防控</h3>
+    </div>
+  </div>
+  <div class="top-option">
+    <nz-dropdown [nzPlacement]="'bottomRight'">
+      <div nz-dropdown>
+        <nz-avatar nzIcon="user" style="background-color:#87d068;"></nz-avatar>
+        <span class="user-name">{{UserInfo.name}}</span>
+      </div>
+      <ul nz-menu>
+        <li nz-menu-item>
+          <a [routerLink]="[ './user/userInfo']">个人中心</a>
+        </li>
+        <li nz-menu-item>
+            <a [routerLink]="[ './user/changePassword']">修改密码</a>
+        </li>
+        <li nz-menu-item >
+            <a [routerLink]="[ '/login']" (click)="signOut()">退出登录</a>
+        </li>
+      </ul>
+    </nz-dropdown>
+  </div>
+</div>

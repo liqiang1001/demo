@@ -1,0 +1,33 @@
+<div>
+  <div class="new-list">
+    <div class="new-top new-list-item" [ngClass]="{'active': status1}" *ngIf="flag1">
+      <img src="assets/image/new_hg/qyzc2.png" alt="">
+      <p>企业自查</p>
+    </div>
+    <div class="new-bg-img">
+      <div echarts [options]="options" [merge]="mergeData" style="width:100%;height:100%"></div>
+    </div>
+    <ul class="new-list2">
+      <li class="new-list-item" [ngClass]="{'active': !status2}" *ngIf="flag2">
+        <img src="assets/image/new_hg/xhhc2.png" alt="">
+        <p>协会核查</p>
+      </li>
+      <li class="new-list-item" [ngClass]="{'active': !status3}" *ngIf="flag3">
+        <img src="assets/image/new_hg/lshc2.png" alt="">
+        <p>律所核查</p>
+      </li>
+      <li class="new-list-item" [ngClass]="{'active': !status4}" *ngIf="flag4">
+        <img src="assets/image/new_hg/kshc2.png" alt="">
+        <p>会所核查</p>
+      </li>
+      <li class="new-list-item" [ngClass]="{'active': !status5}" *ngIf="flag5">
+        <img src="assets/image/new_hg/zfhc2.png" alt="">
+        <p>政府核查</p>
+      </li>
+    </ul>
+  </div>
+  <nz-row nzGutter="16" nzType="flex" nzJustify="center">
+    <button (click)="toUpload()" nz-button nzType="primary">上传资料</button>
+    
+  </nz-row>
+</div>

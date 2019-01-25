@@ -1,0 +1,133 @@
+<div class="container">
+  <nz-tabset [nzTabPosition]="nzTabPosition" [(nzSelectedIndex)]="selectedIndex" [nzHideAll]="false" [nzAnimated]="false">
+    <nz-tab *ngFor="let tab of Tabs" [nzTitle]="titleTemplate" (nzClick)="ToggleStatus(tab)" (nzSelect)="getOtherDetail(tab)">
+      <ng-template #titleTemplate>
+        {{ tab.name }}
+         <nz-badge *ngIf="tab.num>0" [nzCount]="tab.num"></nz-badge>
+      </ng-template>
+    </nz-tab>
+  </nz-tabset>
+  <!-- 自查报告 -->
+  <div class="checkself" style="height:calc(100vh - 225px);" *ngIf="TabConfig && IsCheckSelf">
+    <nz-row class="checkself-item" nzGutter="8" *ngFor="let item of CheckSelfInfo">
+      <nz-col class="label" nzSpan="4">
+        <span>*</span>{{item.res1}}:
+      </nz-col>
+      <nz-col class="info" nzSpan="10">
+        <nz-row nzGutter="8">
+          <nz-upload nzAction="/upload" [nzCustomRequest]="upload" [nzDisabled]="item.FileList.length > 0" [nzAccept]="item.accept" [nzFileList]="item.FileList" [nzLimit]="1"
+            [nzRemove]="delFile.bind(this.accessoryId,item)">
+            <button nz-button nzType="primary" (click)="selectCurent(item)">
+              <i nz-icon type="upload"></i>
+              <span>上传文件</span>
+            </button>
+          </nz-upload>
+        </nz-row>
+        <nz-row class="tip" nzGutter="8">
+          {{item.desc}}
+        </nz-row>
+      </nz-col>
+    </nz-row>
+    <nz-row nzGutter="8" class="desc">
+      <nz-col nzSpan="20" nzOffset="3">
+        <p>上传材料说明：</p>
+        <p>
+          1.每个模块为单文件上传，请在上传材料时确认是内容齐全的单文件。
+        </p>
+        <p>
+          2.按照对应的格式上传，上传错误文件导致的结果由企业自行承担
+        </p>
+      </nz-col>
+    </nz-row>
+  </div>
+  <!-- 其他表单 -->
+  <div class="Other" style="height:calc(100vh - 225px);" *ngIf="!IsCheckSelf">
+    <nz-row nzGutter="16" class="red">
+      电子版文件应为PDF格式。纸质版文件采用标准A4规格的纸张，双面打印一套，加盖公章及骑缝章，要求清晰、完整。装订成册，在材料清单中标明序号及文件编号，编制页码。资料清单带有“√”标识的，需上传加盖公司公章PDF电子版，无“√”标识的资料清单项直接上传电子版PDF即可。
+    </nz-row>
+    <nz-row nzGutter="8">
+      <nz-table #nzTable [nzBordered]="true" [nzData]="OtherTabDetailTable" [nzFrontPagination]="false" [nzShowPagination]="false" [nzScroll]="{ y: 'calc(100vh - 330px)' }">
+        <thead>
+          <!-- 序号	资料清单	文件数量	上传时间	备注	操作 -->
+          <tr>
+            <th nzWidth="70px">序号</th>
+            <th>资料清单</th>
+            <th nzWidth="10%">文件数量</th>
+            <th nzWidth="10%">上传时间</th>
+            <th nzWidth="20%">备注</th>
+            <th nzWidth="160px">操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of nzTable.data;let i = index">
+            <td>{{i + 1}}</td>
+            <td [innerHTML]="data.res1">{{data.res1}}</td>
+            <td>{{data.res0}}</td>
+            <td>{{data.createTime | date : 'yyyy-MM-dd'}}</td>
+            <td>{{data.remark}}</td>
+            <td>
+              <button nzSize="small" nz-button nzType="primary" (click)="upLoadFiles(tplTitle, tplContent, tplFooter,data)">
+                <span>上传材料</span>
+              </button>
+              <button nzSize="small" (click)="comment(tplRemark,tplRemarkFooter,data)" nz-button>备注</button>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </nz-row>
+
+  </div>
+  <nz-row nzGutter="8" nzType="flex" nzJustify="center">
+    <button (click)="commitReport(tplSubmit,tplSubmitFooter)" nz-button nzType="primary">提交</button>
+
+  </nz-row>
+
+  <ng-template #tplTitle>
+    <span>文件上传</span>
+  </ng-template>
+  <!-- 文件上传模态框中部 -->
+  <ng-template #tplContent>
+    <nz-row nzGutter="8">
+      <nz-upload nzAction="/upload" [nzCustomRequest]="upload" nzAccept=".doc,.pdf" [nzFileList]="FileList" [nzLimit]="1" [nzRemove]="delFile.bind(this,item)">
+        <button nz-button nzType="primary">
+          <i nz-icon type="upload"></i>
+          <span>上传文件</span>
+        </button>
+      </nz-upload>
+
+    </nz-row>
+  </ng-template>
+  <!-- 备注模态框中部 -->
+  <ng-template #tplRemark>
+    <nz-row nzGutter="8">
+      <textarea nz-input [(ngModel)]="CurrentUpload.remark" maxlength="255" autofocus id="remark" name="remark" [nzAutosize]="false" style="height:200px;" placeholder="最多输入255个汉字"></textarea>
+    </nz-row>
+  </ng-template>
+  <!-- 文件上传模态框底部 -->
+  <ng-template #tplFooter>
+    <button nz-button nzType="primary" (click)="destroyTplModal()" [nzLoading]="tplModalButtonLoading">关闭</button>
+  </ng-template>
+  <!-- 备注模态框底部 -->
+  <ng-template #tplRemarkFooter>
+    <button nz-button nzType="primary" (click)="insertRemark()">保存</button>
+    <button nz-button nzType="default" (click)="closeTplModal()">关闭</button>
+  </ng-template>
+  <!-- 确认提交模态框中部 -->
+  <ng-template #tplSubmit>
+    <nz-row nzGutter="8">
+      <p>
+        请认真核对所要上传资料，确保上传资料清晰、完整、真实有效， <span class="red">资料一经提交，无法修改，</span>  请谨慎提交，谢谢！
+      </p>
+      <p>
+        <span class="red">
+          提交成功后，请等待系统通知!
+        </span>
+      </p>
+    </nz-row>
+  </ng-template>
+   <!-- 提交模态框底部 -->
+   <ng-template #tplSubmitFooter>
+      <button nz-button nzType="primary" (click)="commit()">提交</button>
+      <button nz-button nzType="default" (click)="closeTplModal()">关闭</button>
+    </ng-template>
+</div>

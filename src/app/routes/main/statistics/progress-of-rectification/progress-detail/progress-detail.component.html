@@ -1,0 +1,40 @@
+<div>
+  <nz-row [nzGutter]="24">
+    <nz-col [nzMd]="6">
+      企业名称：
+      {{rectificationDetail.sysEnterprise.name}}
+    </nz-col>
+    <nz-col [nzMd]="6">
+      工作进展：
+      {{rectificationDetail.sysEnterprise.workProgressName}}
+    </nz-col>
+    <nz-col [nzMd]="6">
+      存量不合规业务计划退出时间：
+      {{rectificationDetail.outTime|date:'yyyy-MM-dd'}}
+    </nz-col>
+  </nz-row>
+  <nz-row [nzGutter]="24" style="margin-top:15px;">
+    <nz-col [nzMd]="6">
+      整改以来存量规模变化（万元）：
+      {{rectificationDetail.complianceSince}}
+    </nz-col>
+    <nz-col [nzMd]="6">
+      整改以来存量不合规业务规模变化（万元）：
+      {{rectificationDetail.notComplianceSince}}
+    </nz-col>
+  </nz-row>
+  <nz-row [nzGutter]="24">
+    <nz-col [nzMd]="18" style="text-align: right">
+      <button nz-button [nzType]="'primary'" (click)="goBack()">
+        <i class="anticon anticon-rollback"></i>
+        <span>返回</span>
+      </button>
+    </nz-col>
+  </nz-row>
+  <nz-row  style="margin-top: 4%;">
+    <div echarts [options]="options1"></div>
+  </nz-row>
+  <nz-row  style="margin-top: 4%;">
+    <div echarts [options]="options2"></div>
+  </nz-row>
+</div>

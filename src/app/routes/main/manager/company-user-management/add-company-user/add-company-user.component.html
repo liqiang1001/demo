@@ -1,0 +1,215 @@
+<form class="SearchForm" nz-form [formGroup]="addForm">
+  <nz-row nzGutter="16">
+    <nz-col nzLg="24" nzXl="24">
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="5" nzRequired >企业名称</nz-form-label>
+        <nz-form-control nzSpan="19">
+          <input nz-input formControlName="enterpriseName">
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+  </nz-row>
+  <nz-row nzGutter="16">
+    <nz-col nzLg="12" nzXl="12">
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="10"  [nzRequired]="!addFlag">用户名</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <input nz-input formControlName="loginName">
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+    <nz-col nzLg="12" nzXl="12">
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="10" [nzFor]="'roleIds'">角色名称</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <nz-select style="width: 100%" formControlName="roleIds" [attr.id]="'roleIds'" [nzPlaceHolder]="'请选择'"
+            nzAllowClear>
+            <nz-option *ngFor="let item of roleList" [nzLabel]="item.name" [nzValue]="item.id">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+  </nz-row>
+  <nz-row nzGutter="16">
+    <nz-col nzLg="12" nzXl="12">
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="10" [nzRequired]="!addFlag">统一社会信用代码</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <input nz-input formControlName="registrationNumber">
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+    <nz-col nzLg="12" nzXl="12">
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="10">手机号</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <input nz-input formControlName="phoneCode">
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+  </nz-row>
+  <nz-row nzGutter="16">
+    <nz-col nzLg="12" nzXl="12">
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="10" [nzFor]="'provinceId'" nzRequired>所属区域</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <nz-select style="width: 100%" formControlName="provinceId" [attr.id]="'provinceId'" [nzPlaceHolder]="'请选择'"
+            nzAllowClear (ngModelChange)="getCitys($event)" [nzDisabled]="provinceIdFlag">
+            <nz-option *ngFor="let item of provinces" [nzLabel]="item.name" [nzValue]="item.id">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+    <nz-col nzLg="12" nzXl="12">
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="10" [nzFor]="'cityId'" nzRequired>市</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <nz-select style="width: 100%" formControlName="cityId" [attr.id]="'cityId'" [nzPlaceHolder]="'请选择'"
+            nzAllowClear (ngModelChange)="getDistricts($event)" [nzDisabled]="cityIdFlag">
+            <nz-option *ngFor="let item of citys" [nzLabel]="item.name" [nzValue]="item.id">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+    <nz-col nzLg="12" nzXl="12">
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="10" [nzFor]="'districtId'" nzRequired>区</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <nz-select style="width: 100%" formControlName="districtId" [attr.id]="'districtId'" [nzPlaceHolder]="'请选择'"
+            nzAllowClear (ngModelChange)="getRoads($event)" [nzDisabled]="districtIdFlag">
+            <nz-option *ngFor="let item of districts" [nzLabel]="item.name" [nzValue]="item.id">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+    <nz-col nzLg="12" nzXl="12">
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="10" [nzFor]="'roadId'">街道</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <nz-select style="width: 100%" formControlName="roadId" [attr.id]="'roadId'" [nzPlaceHolder]="'请选择'"
+            nzAllowClear [nzDisabled]="roadIdFlag">
+            <nz-option *ngFor="let item of roadIds" [nzLabel]="item.name" [nzValue]="item.id">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+  </nz-row>
+  <nz-row nzGutter="16">
+    <nz-col nzLg="24" nzXl="24">
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="5" [nzRequired]="!addFlag">注册地址</nz-form-label>
+        <nz-form-control nzSpan="19">
+          <input nz-input formControlName="registrationAddress">
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+  </nz-row>
+  <nz-row>
+    <nz-col nzLg="24" nzXl="24">
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="5" nzRequired>企业类型</nz-form-label>
+        <!-- <nz-form-control nzSpan="19" nzFor="'typeIds'">
+          <nz-checkbox-wrapper style="width: 100%;margin-top: 10px;" [attr.id]="'typeIds'" (nzOnChange)="selectCheckOpiton($event)">
+            <div nz-row>
+              <div nz-col nzSpan="8" *ngFor="let item of enterpriseTypeList">
+                <label nz-checkbox [nzValue]="item.id">{{item.name}}</label>
+              </div>
+            </div>
+          </nz-checkbox-wrapper>
+        </nz-form-control> -->
+        <nz-form-control nzSpan="19" nzFor="'typeIds'">
+            <nz-col nzSpan="8">
+              <label nz-checkbox formControlName="allChecked" (ngModelChange)="updateAllChecked($event)"
+                [nzIndeterminate]="indeterminate">全选</label>
+            </nz-col>
+            <nz-checkbox-wrapper style="width: 100%;" [attr.id]="'typeIds'" (nzOnChange)="selectCheckOpiton($event)">
+              <div nz-row>
+                <div nz-col nzSpan="8" *ngFor="let item of TypeList">
+                  <label nz-checkbox [nzChecked]="item.checked" [nzValue]="item.id">{{item.name}}</label>
+                </div>
+              </div>
+            </nz-checkbox-wrapper>
+          </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+  </nz-row>
+  <nz-row nzGutter="16">
+    <nz-col nzLg="24" nzXl="24">
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="5" [nzRequired]="!addFlag">来源</nz-form-label>
+        <nz-form-control nzSpan="19">
+          <!-- <input nz-input placeholder="placeholder" formControlName="provinceId" [attr.id]="provinceId"> -->
+          <nz-radio-group formControlName="sourceId">
+            <label nz-radio *ngFor="let item of sourceList" [nzValue]="item.id">{{item.name}}</label>
+          </nz-radio-group>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+
+  </nz-row>
+  <nz-row nzGutter="16" *ngIf="!addFlag">
+    <nz-col nzLg="24" nzXl="24">
+      <nz-form-label nzSpan="5" [nzRequired]="!addFlag">系统可见</nz-form-label>
+      <nz-form-control nzSpan="19" nzFor="'systemIds'">
+        <nz-checkbox-wrapper style="width: 100%;" (nzOnChange)="selectCheckOpiton2($event)" [attr.id]="'systemIds'">
+          <label nz-checkbox [nzValue]="item" *ngFor="let item of systemCanSeeList">{{item.name}}</label>
+        </nz-checkbox-wrapper>
+      </nz-form-control>
+    </nz-col>
+
+  </nz-row>
+  <nz-row nzGutter="16" *ngIf="!addFlag">
+    <nz-col nzLg="24" nzXl="24">
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="5">密码类型</nz-form-label>
+        <nz-form-control nzSpan="19">
+          <nz-radio-group formControlName="defPassword" (ngModelChange)="selectPassword($event)">
+            <label nz-radio [nzValue]="true">初始密码</label>
+            <label nz-radio [nzValue]="false">设定密码</label>
+          </nz-radio-group>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+
+  </nz-row>
+  <nz-row *ngIf="showPass">
+    <nz-row nzGutter="16">
+      <nz-col nzLg="12" nzXl="12">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="10">输入密码</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input formControlName="passWord" type="password">
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+    </nz-row>
+    <nz-row nzGutter="16">
+      <nz-col nzLg="12" nzXl="12">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="10">确认密码</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input formControlName="passWord2" type="password">
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+    </nz-row>
+  </nz-row>
+</form>
+<div class="customize-footer " style="height:40px;
+  padding: 20px 0 30px 0;border-top: 1px solid #e8e8e8;margin-top:25px">
+  <div nz-col [nzSpan]="12" style="text-align:center">
+    <button nz-button [nzType]="'primary'" (click)="handleCancel()">
+      返 回
+    </button>
+  </div>
+  <div nz-col [nzSpan]="12" style="text-align:center">
+    <button nz-button [nzType]="'primary'" (click)="addpriseUser(addForm.value)">
+      确定
+    </button>
+  </div>
+</div>

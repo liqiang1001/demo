@@ -1,0 +1,30 @@
+<div>
+  <nz-table #nzTable [nzData]="tableList" (nzCurrentPageDataChange)="currentPageDataChange($event)" [nzTotal]="total"
+    (nzPageIndexChange)="refreshStatus($event)" [nzFrontPagination]="false" [(nzPageIndex)]="pageNum" [(nzPageSize)]="pageSize"
+     [nzShowSizeChanger]="true" [nzShowQuickJumper]="true" (nzPageIndexChange)="searchData()"
+    (nzPageSizeChange)="searchData(true)" [nzScroll]="{ y: '400px' }"> 
+    <thead>
+      <tr>
+        <th nzWidth="150px">流水号</th>
+        <th nzWidth="350px">企业</th>
+        <th nzWidth="100px">操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of nzTable.data;let i = index;">
+        <td>{{item.serialNumber}}</td>
+        <td>{{item.enterName}}</td>
+        <td>
+          <button nz-button [nzType]="'primary'" (click)="process(item)">
+            <span>处理</span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <nz-row style="text-align: center;margin-top:20px;">
+    <button nz-button [nzType]="'default'" (click)="handleCancel()">
+      <span>关闭</span>
+    </button>
+  </nz-row>
+</div>

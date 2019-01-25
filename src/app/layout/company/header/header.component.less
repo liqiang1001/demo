@@ -1,0 +1,61 @@
+.container{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    .logo{
+        width: 260px;
+        padding: 9px 20px 9px 0;
+        height: 100%;
+        display: flex;
+        img{
+            width: 46px;
+            height: 46px;
+            margin-left: 11px;
+        }
+        .logo-bar{
+            width: 1px;
+            background-color: #fff;
+            height: 34px;
+            margin-right: 10px;
+            margin-left: 10px;
+            margin-top: 7px;
+        }
+        h3{
+            font-size: 16px;
+            font-family: MicrosoftYaHei;
+            color: #fff;
+            line-height: 23px;
+            margin-bottom: 0;
+        }
+    }
+    .top-menu{
+        display: flex;
+        list-style: none;
+        margin-bottom: 0;
+        li{
+            font-size: 14px;
+            font-family: MicrosoftYaHei;
+            height: 64px;
+            line-height: 64px;
+            margin: 0 20px;
+            padding: 0;
+            color: #fff;
+            cursor: pointer;
+            &:hover{
+                border-bottom: 3px solid #fff;
+            }
+            &.active{
+                border-bottom: 3px solid #fff;
+            }
+        }
+    }
+    .top-option{
+        display: flex;
+        align-items: center;
+        .user-name{
+            color: #fff;
+            vertical-align: middle;
+            padding: 0 10px;
+        }
+    }
+}

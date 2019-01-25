@@ -1,0 +1,12 @@
+<div>
+  <div class="history_year" *ngFor="let item of List">
+    <h2>{{item.year}}年经营信息任务历史记录</h2>
+    <div class="history_list">
+      <div class="item" (click)="goDetail(unit)" *ngFor="let unit of item.info">
+        <p>{{unit.begin_date_month}}</p>
+        <i *ngIf="unit.report_progress===2" nz-icon iconfont="icon-gougou" style="color:#008000;"></i>
+        <i *ngIf="unit.report_progress!==2" nz-icon iconfont="icon-butongguodechacha" style="color:#ff0000;"></i>
+      </div>
+    </div>
+  </div>
+</div>

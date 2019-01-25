@@ -1,0 +1,38 @@
+<div class="container-fluid">
+  <div class="modal-body">
+    <div class="c-avatar-cut-box">
+      <img-cropper #avatarCropper [image]="avatar" [settings]="avatarSettings"></img-cropper>
+    </div>
+    <div class="c-avatar-preview-box c-ml15 text-center">
+      <div class="c-mt15" style="text-align: center">
+        <img class="center-block rounded-circle c-avatar-img-lg" [src]="beforeImg">
+        <div class="c-avatar-desc c-mt5">原头像</div>
+      </div>
+      <div class="c-mt20" *ngIf="avatar.image" style="text-align: center">
+        <img class="center-block rounded-circle c-avatar-img-lg" [src]="avatar.image">
+        <div class="c-avatar-desc c-mt5">已选取</div>
+      </div>
+    </div>
+  </div>
+  <div class="text-danger c-mt10">
+    注：请上传小于8M的JPG/JPEG、PNG、GIF图片。
+  </div>
+
+  <div class="modal-footer" >
+    <div style="display: flex;justify-content: space-between;">
+      <div>
+        <nz-upload [nzCustomRequest]="click_fileUp" [nzShowUploadList]="false">
+          <button nz-button>
+            <i nz-icon type="upload"></i><span>预览图片</span>
+          </button>
+        </nz-upload>
+      </div>
+      <div >
+        <button nz-button nzType="primary" class="btn-success" (click)="upload($event,avatarCropper)"> 上传图片</button>
+        <button nz-button nzType="primary" class="btn-light" (click)="close()"> 关闭窗口</button>
+      </div>
+    </div>
+  </div>
+
+
+</div>

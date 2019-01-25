@@ -1,0 +1,31 @@
+<div class="login-body box-s">
+  <div class="c-login-header">
+    <h3>登录</h3>
+  </div>
+  <div class="form-body">
+    <div class="form-list box-s">
+      <img src="assets/image/userName.png" style="width:20px;height:21px;top:11px " alt="">
+      <input type="text" placeholder="用户名" [(ngModel)]="userName" (keyup.enter)="_login()" #PassInput autofocus="autofocus">
+    </div>
+    <div class="form-list box-s">
+      <img src="assets/image/passWord.png" style="width:27px;height:17px;top:13px " alt="">
+      <input type="password" placeholder="密码" [(ngModel)]="passWord" (keyup.enter)="_login()">
+    </div>
+    <div class=" box-s no-border " style="position: relative;width:300px;margin-top:20px;">
+      <div class=" form-list box-s form-list-one">
+        <img src="assets/image/authCode.png" style="width:21px;height:22px;top:13px " alt="">
+        <input type="text" placeholder="验证码" [(ngModel)]="registerNum" (keyup.enter)="_login()">
+      </div>
+      <div class="code-img">
+        <img src="{{captchaImg}}" alt="" (click)="_updateCapthaImg()">
+      </div>
+    </div>
+    <div class="form-list2">
+      <label nz-checkbox [(ngModel)]="checked">记住密码</label>
+      <span class="forget" (click)="forgotPassWord()">忘记密码？</span>
+    </div>
+    <div class="form-btn">
+      <button type="submit" nz-button (click)="_login()"> <span>登录</span></button>
+    </div>
+  </div>
+</div>

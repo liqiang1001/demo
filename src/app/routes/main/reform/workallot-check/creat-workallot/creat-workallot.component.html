@@ -1,0 +1,289 @@
+<div>
+  <nz-row nzGutter="16">
+    <nz-col>
+      <span class="lab_enter"> 分配类型：</span>
+      <button nz-button *ngIf="flag2" [nzType]="tabType?'default':'primary'" (click)="allotType('1')"
+        style="margin-right: 20px;">
+        <span>协会</span>
+      </button>
+      <button nz-button *ngIf="flag5" [nzType]="!tabType?'default':'primary'" (click)="allotType('2')">
+        <span>政府</span>
+      </button>
+    </nz-col>
+  </nz-row>
+  <form nz-form [formGroup]="createForm">
+    <nz-row nzGutter="16" class="create-table" style="margin-top:30px;" *ngIf="!tabType">
+      <nz-col nzSpan="12" *ngIf="flag1">
+        <div style="height:454px;border:1px solid #e8e8e8;overflow: hidden;">
+          <nz-table #nzTable1 [nzFrontPagination]="false" [nzBordered]="true" [nzShowPagination]="false" [nzData]="enterList"
+            [nzPageSize]="1000000" [nzScroll]="{y: '300px' }" (nzCurrentPageDataChange)="currentPageDataChange('1',$event)">
+            <thead>
+              <tr>
+                <th nzShowCheckbox [(nzChecked)]="allChecked1" [nzIndeterminate]="indeterminate1" (nzCheckedChange)="checkAll('1',$event)"></th>
+                <th>
+                  企业名称:
+                  <input style="width:150px;margin-right:10px;" formControlName="companyName" nz-input placeholder='请输入搜索内容'
+                    nzSize="default">
+                </th>
+                <th>
+                  <nz-row>
+                    <nz-col>
+                      区:
+                      <nz-select style="width:150px;margin-right:10px;" [nzPlaceHolder]="'请选择'" formControlName="countyCode"
+                        nzAllowClear>
+                        <nz-option *ngFor="let item of districts" [nzLabel]="item.name" [nzValue]="item.id">
+                        </nz-option>
+                      </nz-select>
+                      <button nz-button [nzType]="'primary'" (click)="getEnterList(createForm.value)" (keyup.enter)="getEnterList(createForm.value)">
+                        <span>查询</span>
+                      </button>
+                    </nz-col>
+                  </nz-row>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of nzTable1.data">
+                <td nzShowCheckbox [(nzChecked)]="data.checked" [nzDisabled]="data.disabled" (nzCheckedChange)="refreshStatus('1')">
+                </td>
+                <td colspan="2">
+                  <div class="flex-box ">
+                    <span>{{data.res0}}</span>
+                    <span>{{data.res1}}</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </div>
+      </nz-col>
+      <nz-col nzSpan="12" *ngIf="flag5">
+        <div style="height:454px;border:1px solid #e8e8e8;overflow: hidden;">
+          <nz-table #nzPeopleGroup [nzFrontPagination]="false" [nzBordered]="true" [nzShowPagination]="false" [nzData]="peopleGroupList"
+            [nzScroll]="{ y: '400px' }" (nzCurrentPageDataChange)="currentPageDataChange('2',$event)">
+            <thead>
+              <tr>
+                <!-- <th nzShowCheckbox [(nzChecked)]="allChecked2" [nzIndeterminate]="indeterminate2" (nzCheckedChange)="checkAll('2',$event)"></th> -->
+                <!-- <th colspan="2">初审组名称:
+                  <input style="width:150px;margin-right:10px;" nz-input placeholder="请输入搜索内容" nzSize="default"
+                    formControlName="checkGroupName">
+                  <button nz-button [nzType]="'primary'" (click)="getcheckGroupList(createForm.value)" (keyup.enter)="getcheckGroupList(createForm.value)">
+                    <span>查询</span>
+                  </button>
+                </th> -->
+                <th colspan="2" style="text-align: left;text-indent: 53px;">审查人</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of nzPeopleGroup.data">
+                <td (click)="selsectActive($event)" nzShowCheckbox [(nzChecked)]="data.checked" [nzDisabled]="data.disabled"
+                  (nzCheckedChange)="refreshStatus('2')">
+                </td>
+                <td> {{data.name}}</td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </div>
+      </nz-col>
+    </nz-row>
+    <nz-row nzGutter="16" class="create-table" style="margin-top:30px;" *ngIf="tabType">
+      <nz-col nzSpan="6" *ngIf="flag1">
+        <div  style="height:454px;border:1px solid #e8e8e8;overflow: hidden;">
+          <nz-table #nzTable1 [nzFrontPagination]="false" [nzBordered]="true" [nzShowPagination]="false" [nzData]="enterList"
+            [nzPageSize]="10" [nzScroll]="{y: '300px' }" (nzCurrentPageDataChange)="currentPageDataChange('3',$event)">
+            <thead>
+              <tr>
+                <th [nzLeft]="0" colspan="2">
+                  企业名称:
+                  <input style="width:150px;margin-right:10px;" formControlName="companyName" nz-input placeholder='请输入搜索内容'
+                    nzSize="default">
+                </th>
+              </tr>
+              <tr>
+                <th colspan="2">
+                  区:
+                  <nz-select style="width:150px;margin-right:10px;" formControlName="countyCode" [nzPlaceHolder]="'请选择'"
+                    nzAllowClear>
+                    <nz-option *ngFor="let item of districts" [nzLabel]="item.name" [nzValue]="item.id">
+                    </nz-option>
+                  </nz-select>
+                  <button nz-button [nzType]="'primary'" (click)="getEnterList(createForm.value)" (keyup.enter)="getEnterList(createForm.value)">
+                    <span>查询</span>
+                  </button>
+                </th>
+              </tr>
+              <tr>
+                <th nzShowCheckbox [(nzChecked)]="allChecked3" [nzIndeterminate]="indeterminate3" (nzCheckedChange)="checkAll('3',$event)"></th>
+
+                <th>
+                  <div class="flex-box ">
+                    <span>企业名称</span>
+                    <span>注册地址</span>
+                  </div>
+                </th>
+
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of nzTable1.data">
+                <td nzShowCheckbox [(nzChecked)]="data.checked" [nzDisabled]="data.disabled" (nzCheckedChange)="refreshStatus('3')">
+                </td>
+                <td>
+                  <div class="flex-box ">
+                    <span>{{data.res0}}</span>
+                    <span>{{data.res1}}</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </div>
+      </nz-col>
+      <nz-col nzSpan="6" *ngIf="flag4">
+        <div style="height:454px;border:1px solid #e8e8e8;overflow: hidden;">
+          <nz-table #nzAccount [nzFrontPagination]="false" [nzBordered]="true" [nzShowPagination]="false" [nzData]="accountantList"
+            [nzScroll]="{ y: '335px' }" (nzCurrentPageDataChange)="currentPageDataChange('4',$event)">
+            <thead>
+              <tr>
+                <th colspan="2">会所:
+                  <nz-select style="width:150px;margin-right:10px;" formControlName="accountantGroup" [nzPlaceHolder]="'请选择'"
+                    nzAllowClear>
+                    <nz-option *ngFor="let item of accountantGroupList" [nzLabel]="item.name" [nzValue]="item.id">
+                    </nz-option>
+                  </nz-select>
+                  <button nz-button [nzType]="'primary'" (click)="getClubUserList('1',createForm.value)" (keyup.enter)="getClubUserList('1',createForm.value)">
+                    <span>查询</span>
+                  </button>
+                </th>
+              </tr>
+              <tr>
+                <th nzShowCheckbox [(nzChecked)]="allChecked4" [nzIndeterminate]="indeterminate4" (nzCheckedChange)="checkAll('4',$event)"></th>
+                <th>
+                  <div class="flex-box ">
+                    <span>姓名</span>
+                    <span>会所名称</span>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of nzAccount.data">
+                <td nzShowCheckbox [(nzChecked)]="data.checked" [nzDisabled]="data.disabled" (nzCheckedChange)="refreshStatus('4')">
+                </td>
+                <td colspan="2">
+                  <div class="flex-box ">
+                    <span>{{data.name}}</span>
+                    <span>{{data.districtName}}</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </div>
+      </nz-col>
+      <nz-col nzSpan="6" *ngIf="flag3">
+        <div style="height:454px;border:1px solid #e8e8e8;overflow: hidden;">
+          <nz-table #nzLayer [nzFrontPagination]="false" [nzBordered]="true" [nzShowPagination]="false" [nzData]="layerList"
+            [nzScroll]="{ y: '335px' }" (nzCurrentPageDataChange)="currentPageDataChange('5',$event)">
+            <thead>
+              <tr>
+                <th colspan="2">律所:
+                  <nz-select style="width:150px;margin-right:10px;" formControlName="layerGroup" [nzPlaceHolder]="'请选择'"
+                    nzAllowClear>
+                    <nz-option *ngFor="let item of layerGroupList" [nzLabel]="item.name" [nzValue]="item.id">
+                    </nz-option>
+                  </nz-select>
+                  <button nz-button [nzType]="'primary'" (click)="getClubUserList('2',createForm.value)" (keyup.enter)="getClubUserList('2',createForm.value)">
+                    <span>查询</span>
+                  </button>
+                </th>
+              </tr>
+              <tr>
+                <th nzShowCheckbox [(nzChecked)]="allChecked5" [nzIndeterminate]="indeterminate5" (nzCheckedChange)="checkAll('5',$event)"></th>
+                <th>
+                  <div class="flex-box ">
+                    <span>姓名</span>
+                    <span>律所名称</span>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of nzLayer.data">
+                <td nzShowCheckbox [(nzChecked)]="data.checked" [nzDisabled]="data.disabled" (nzCheckedChange)="refreshStatus('5')">
+                </td>
+                <td colspan="2">
+                  <div class="flex-box ">
+                    <span>{{data.name}}</span>
+                    <span>{{data.districtName}}</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </div>
+      </nz-col>
+      <nz-col nzSpan="6" *ngIf="flag5">
+        <div style="height:454px;border:1px solid #e8e8e8;overflow: hidden;">
+          <nz-table #nzPeopleList [nzFrontPagination]="false" [nzBordered]="true" [nzShowPagination]="false" [nzData]="peopleList"
+            [nzPageSize]="10" [nzScroll]="{y: '270px' }" (nzCurrentPageDataChange)="currentPageDataChange('6',$event)">
+            <thead>
+              <tr>
+                <th [nzLeft]="0" colspan="3">
+                  审查人姓名:
+                  <input style="width:150px;margin-right:10px;" formControlName="adminName" nz-input placeholder='请输入搜索内容'
+                    nzSize="default">
+                </th>
+              </tr>
+              <tr>
+                <th colspan="3">
+                  区:
+                  <nz-select style="width:150px;margin-right:10px;" formControlName="countyCode2" [nzPlaceHolder]="'请选择'"
+                    nzAllowClear>
+                    <nz-option *ngFor="let item of districts2" [nzLabel]="item.name" [nzValue]="item.id">
+                    </nz-option>
+                  </nz-select>
+                  <button nz-button [nzType]="'primary'" (click)="getGovUserList(createForm.value)" (keyup.enter)="getGovUserList(createForm.value)">
+                    <span>查询</span>
+                  </button>
+                </th>
+              </tr>
+              <tr>
+                <th nzShowCheckbox [(nzChecked)]="allChecked6" [nzIndeterminate]="indeterminate6" (nzCheckedChange)="checkAll('6',$event)"></th>
+                <th colspan="2">
+                  <div class="flex-box ">
+                    <span>姓名</span>
+                    <span>区域</span>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of nzPeopleList.data">
+                <td nzShowCheckbox [(nzChecked)]="data.checked" [nzDisabled]="data.disabled" (nzCheckedChange)="refreshStatus('6')">
+                </td>
+                <td colspan="2">
+                  <div class="flex-box ">
+                    <span>{{data.name}}</span>
+                    <span>{{data.districtName}}</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </div>
+      </nz-col>
+    </nz-row>
+  </form>
+  <nz-row nzGutter="8" class="btn-group">
+    <button nz-button [nzType]="'primary'" (click)="goBack()">
+      <i class="anticon anticon-rollback"></i>
+      <span>返回</span>
+    </button>
+    <button nz-button [nzType]="'primary'" (click)="create(createForm.value)">
+      <i class="anticon anticon-mail"></i>
+      <span>创建</span>
+    </button>
+  </nz-row>
+
+</div>

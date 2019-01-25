@@ -1,0 +1,35 @@
+<div>
+    <div class="task-box">
+        <div class="task" *ngFor="let item of taskList">
+            <h4>{{item.name}}</h4>
+            <p>发布人：{{item.userRealName}}</p>
+            <p>开始时间：{{item.createDate | date:"yyyy-MM-dd"}}</p>
+            <p *ngIf="item.reportType == '1008'">
+                <span>周期：</span>{{item.reportNumber}} 天</p>
+            <p *ngIf="item.reportType != '1008'">
+                <span>周期：</span>{{item.dictName}}</p>
+            <p class="special" *ngIf="item.status == 1">
+                <span>状态：</span>未开始</p>
+            <p class="special" *ngIf="item.status == 2">
+                <span>状态：</span>进行中</p>
+            <p class="special" *ngIf="item.status == 3">
+                <span>状态：</span>已关闭</p>
+            <p *ngIf="item.bacthNumber">
+                <span>进度：</span>{{item.bacthBeginDate | date:"yyyy-MM-dd"}}，第
+                <span class="red">{{item.bacthNumber ? item.bacthNumber : 0}}</span>次
+            </p>
+            <p *ngIf="!item.bacthNumber">
+                <span>进度：</span>{{item.beginDate | date:"yyyy-MM-dd"}}，第
+                <span class="red">{{item.bacthNumber ? item.bacthNumber : 0}}</span>次
+            </p>
+            <p>
+                <span>任务说明：</span>{{item.submitTimeComment}}
+            </p>
+            <div>
+                <button nz-button class="green" nzType="primary" (click)="goReport(item)">填报<i nz-icon type="arrow-right" theme="outline"></i></button>
+                <button nz-button blue="blue" nzType="primary"  (click)="goHistory(item)">历史<i nz-icon type="clock-circle" theme="outline"></i></button>
+            </div>
+        </div>
+    </div>
+
+</div>

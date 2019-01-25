@@ -1,0 +1,165 @@
+<div>
+  <form class="SearchForm" nz-form [formGroup]="searchForm">
+    <nz-row>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9">用户名</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-col>
+              <input nz-input formControlName="userName" (keyup.enter)="getGovernList(searchForm.value)">
+            </nz-col>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9">姓名</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-col>
+              <input nz-input formControlName="name" (keyup.enter)="getGovernList(searchForm.value)">
+            </nz-col>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9" [nzFor]="'role'">角色类型</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-select style="width: 100%" formControlName="role" [attr.id]="'role'" [nzPlaceHolder]="'请选择'"
+              nzAllowClear>
+              <nz-option *ngFor="let item of roleList" [nzLabel]="item.name" [nzValue]="item.id">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9" [nzFor]="'provinceCode'">(区域)省</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-select style="width: 100%" formControlName="provinceCode" [attr.id]="'provinceCode'" [nzPlaceHolder]="'请选择'"
+              nzAllowClear (ngModelChange)="getCitys($event)" [nzDisabled]="provinceIdFlag">
+              <nz-option *ngFor="let item of provinces" [nzLabel]="item.name" [nzValue]="item.id">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9" [nzFor]="'cityCode'">(区域)市</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-select style="width: 100%" formControlName="cityCode" [attr.id]="'cityCode'" [nzPlaceHolder]="'请选择'"
+              nzAllowClear (ngModelChange)="getDistricts($event)" [nzDisabled]="cityIdFlag">
+              <nz-option *ngFor="let item of citys" [nzLabel]="item.name" [nzValue]="item.id">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9" [nzFor]="'countyCode'">(区域)区</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-select style="width: 100%" formControlName="countyCode" [attr.id]="'countyCode'" [nzPlaceHolder]="'请选择'"
+              nzAllowClear [nzDisabled]="districtIdFlag">
+              <nz-option *ngFor="let item of districts" [nzLabel]="item.name" [nzValue]="item.id">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+    </nz-row>
+    <nz-row class="but-group" nzFlex [nzJustify]="'space-between'" style="margin-top:15px;">
+      <nz-col nzSpan="12" style="text-align: left;">
+        <button nz-button [nzType]="'primary'" (click)="showModalForComponent(false)" type="button" *ngIf="menuList[0].show">
+          <i class="anticon anticon-plus"></i>
+          <span>添加政府用户</span>
+        </button>
+        <nz-upload [nzCustomRequest]="click_fileUp" [nzShowUploadList]="false" *ngIf="menuList[1].show">
+          <button nz-button type="button">
+            <i class="anticon anticon-upload"></i>
+            <span>批量添加用户</span>
+          </button>
+        </nz-upload>
+        <a (click)="downLoadTemp()">模板下载</a>
+      </nz-col>
+      <nz-col nzSpan="12">
+        <button nz-button [nzType]="'primary'" (click)="getGovernList(searchForm.value)">
+          <!-- (keyup.enter)="getGovernList(searchForm.value)" -->
+          <i class="anticon anticon-search"></i>
+          <span>查询</span>
+        </button>
+        <button nz-button [nzType]="'primary'" (click)="resetForm()">
+          <i class="anticon anticon-reload"></i>
+          <span>重置</span>
+        </button>
+      </nz-col>
+
+    </nz-row>
+  </form>
+
+  <nz-table #companyUserTable [nzData]="data" [nzTotal]="total" (nzCurrentPageDataChange)="currentPageDataChange($event)"
+    (nzPageIndexChange)="refreshStatus($event)" [nzFrontPagination]="false" [(nzPageIndex)]="pageIndex" [(nzPageSize)]="pageSize"
+    >
+    <thead>
+      <tr>
+        <th nzShowCheckbox [(nzChecked)]="allChecked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAll($event)"></th>
+        <th>序号</th>
+        <th>用户名</th>
+        <th>姓名</th>
+        <th>角色类型</th>
+        <th>手机号</th>
+        <th>管辖区域</th>
+        <th>用户状态</th>
+        <th *ngIf="menuList[2].show||menuList[3].show||menuList[4].show||menuList[5].show">操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of companyUserTable.data;let i = index;">
+        <td nzShowCheckbox [(nzChecked)]="data.checked" [nzDisabled]="data.disabled" (nzCheckedChange)="refreshStatus()"></td>
+        <td>{{i+1}}</td>
+        <td nz-td>{{data.loginName}}</td>
+        <td nz-td>{{data.name}}</td>
+        <td nz-td>
+          <span nz-tooltip={{data.roleNames}}>{{data.roleNames}}</span>
+        </td>
+        <td nz-td>{{data.mobile}}</td>
+        <td *ngIf="data.level>4"></td>
+        <td *ngIf="data.level==null"></td>
+        <td *ngIf="data.level==1">省/市</td>
+        <td *ngIf="data.level==2">市</td>
+        <td *ngIf="data.level==3">区/县</td>
+        <td *ngIf="data.level==4">街道（乡/镇）</td>
+        <td>{{data.status=='0'?'正常':'禁用'}}</td>
+        <td *ngIf="menuList[2].show||menuList[3].show||menuList[4].show||menuList[5].show">
+          <nz-dropdown>
+            <button nz-button nz-dropdown [nzType]="'primary'">操作<i class="anticon anticon-down"></i></button>
+            <ul></ul>
+            <ul nz-menu style="text-align: center">
+              <li *ngIf="menuList[2].show&&configIdFlag&&data.id!==userId" nz-menu-item (click)="showModalForComponent(data.id)">
+                <a>修改</a>
+              </li>
+              <li *ngIf="menuList[2].show&&!configIdFlag" nz-menu-item (click)="showModalForComponent(data.id)">
+                <a>修改</a>
+              </li>
+              <li nz-menu-item (click)="creatPass(data,true)" *ngIf="menuList[3].show">
+                <a>重置密码</a>
+              </li>
+              <li nz-menu-item (click)="creatPass(data,false)" *ngIf="menuList[4].show">
+                <a>重置手机</a>
+              </li>
+              <li *ngIf="menuList[5].show&&configIdFlag&&data.id!==userId" nz-menu-item nzType="danger" (click)="publishJob({'id':data.id,'status':data.status})">
+                <a>{{data.status=='1'?'启用':'禁用'}}</a>
+              </li>
+              <li *ngIf="menuList[5].show&&!configIdFlag" nz-menu-item nzType="danger" (click)="publishJob({'id':data.id,'status':data.status})">
+                <a>{{data.status=='1'?'启用':'禁用'}}</a>
+              </li>
+            </ul>
+          </nz-dropdown>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>

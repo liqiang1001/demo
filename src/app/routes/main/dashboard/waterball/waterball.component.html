@@ -1,0 +1,21 @@
+<div class="water-ball-item">
+  <nz-row nzGutter="8">
+      <h3>北京市-{{WaterInfo?.area}}收到整改通知书企业提交占比</h3>
+  </nz-row>
+  <nz-row nzGutter="8">
+      <nz-col nzSpan="14">
+          <div class="liquild" #waterbox></div>
+      </nz-col>
+      <nz-col class="reight-text" nzSpan="10">
+          <nz-row nzGutter="8">
+              共： {{WaterInfo?.all}} 家
+          </nz-row>
+          <nz-row nzGutter="8">
+              已完整提交： {{WaterInfo?.receive}} 家
+          </nz-row>
+          <nz-row nzGutter="8">
+              未完整提交： {{WaterInfo?.noreceive}} 家
+          </nz-row>
+      </nz-col>
+  </nz-row>
+</div>

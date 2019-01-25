@@ -1,0 +1,239 @@
+<div>
+  <nz-row>
+    <p class="c-line-title" *ngIf="!confirmd">创建任务</p>
+    <p class="c-line-title" *ngIf="confirmd">修改任务</p>
+  </nz-row>
+  <form class="SearchForm" nz-form [formGroup]="createForm">
+    <nz-row>
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="4" nzRequired>任务名称</nz-form-label>
+        <nz-form-control nzSpan="8">
+          <input nz-input formControlName="taskName">
+        </nz-form-control>
+      </nz-form-item>
+    </nz-row>
+    <nz-row>
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="4" nzRequired>企业类型(可复选)</nz-form-label>
+        <nz-form-control nzSpan="8">
+          <nz-select style="width: 100%;" [nzMode]="'multiple'" [nzPlaceHolder]="'请选择'" formControlName="conpanyType"
+            nzAllowClear (ngModelChange)="selectType($event)">
+            <nz-option *ngFor="let item of conpanyNameData" [nzLabel]="item.name" [nzValue]="item.id">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-row>
+    <nz-row>
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="4" nzRequired>关联区域(可复选)</nz-form-label>
+        <nz-form-control nzSpan="10" nzFlex>
+          <textarea disabled formControlName="areas" rows="1" style="width: 80%;border-radius: 5px"></textarea>
+          <button nz-button [nzType]="'primary'" type="button" (click)="getTree()" style="margin-left: 6px;">
+            <i class="anticon anticon-plus"></i>
+            <span>添加区域</span>
+          </button>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-row>
+    <nz-row>
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="4" nzRequired>选择子表单</nz-form-label>
+        <nz-form-control nzSpan="15">
+          <nz-checkbox-wrapper style="width: 100%;" nzFor="'selectList'" [attr.id]="'selectList'" (nzOnChange)="selectCheckOpiton($event)">
+            <div nz-col nzSpan="8" *ngFor="let item of TypeList">
+              <label nz-checkbox [nzChecked]="item.checked" [nzValue]="item.id">{{item.formName}}</label>
+            </div>
+          </nz-checkbox-wrapper>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-row>
+    <nz-row>
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="4" nzRequired>任务开始时间</nz-form-label>
+        <nz-form-control nzSpan="15">
+          <nz-date-picker style="width: 100%;" [nzPlaceHolder]="'选择日期'" [nzFormat]="'yyyy-MM-dd'" formControlName="taskTime"></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-row>
+    <nz-row>
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="4" nzRequired>是否是紧急任务</nz-form-label>
+        <nz-form-control nzSpan="15">
+          <nz-radio-group formControlName="isEmergency">
+            <label nz-radio [nzValue]="1">是</label>
+            <label nz-radio [nzValue]="0">否</label>
+          </nz-radio-group>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-row>
+    <nz-row>
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="4" nzRequired>是否需要审批</nz-form-label>
+        <nz-form-control nzSpan="15">
+          <nz-radio-group formControlName="isApproval">
+            <label nz-radio [nzValue]="1">是</label>
+            <label nz-radio [nzValue]="0">否</label>
+          </nz-radio-group>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-row>
+    <nz-row>
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="4" nzRequired>频次选择</nz-form-label>
+        <nz-form-control nzSpan="15">
+          <nz-radio-group formControlName="statusOne" (ngModelChange)="selectRadio($event)">
+            <label nz-radio [nzValue]="item.id" *ngFor="let item of reportTypeList">{{item.name}}</label>
+          </nz-radio-group>
+          <label style="cursor: pointer;margin-top: -6px;">
+            间隔
+            <nz-input-number formControlName="statusTwo" [nzMin]="1" (click)="focus()"  [nzStep]="1"></nz-input-number>天
+          </label>
+          <!-- (ngModelChange)="selectRadio2($event)" -->
+        </nz-form-control>
+      </nz-form-item>
+    </nz-row>
+    <nz-row>
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="4">填报提交时间说明</nz-form-label>
+        <nz-form-control nzSpan="10">
+          <textarea formControlName="fillData" rows="2" style="width: 80%;border-radius: 5px" placeholder="例如：次月3日内提交"></textarea>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-row>
+    <nz-row>
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="4">附件上传</nz-form-label>
+        <nz-form-control nzSpan="15">
+          <nz-upload [nzCustomRequest]="click_fileUp" #nzUploader [nzShowUploadList]="false">
+            <button nz-button>
+              <i class="anticon anticon-upload"></i>
+              <span>上传文件</span>
+            </button>
+            <nz-progress *ngIf="progress < 100 && progress > 0" [nzPercent]="progress" nzSize="small"></nz-progress>
+          </nz-upload>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-row>
+    <nz-row>
+      <nz-col nzSpan="4"></nz-col>
+      <nz-col nzSpan="15">
+        <p *ngFor="let kk of filenamed1" style="margin-top:10px">{{kk.fileName}}</p>
+        <div *ngIf="confirmd">
+          <p>已上传过：</p>
+          <p *ngFor="let kk of filenamed" style="margin-top:10px">{{kk.fileName}}</p>
+        </div>
+
+      </nz-col>
+    </nz-row>
+    <!-- 区域弹框 -->
+    <nz-modal nzWidth="700" [(nzVisible)]="isVisible" nzTitle="关联区域" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+      <nz-tree #treeCom [nzData]="nodes" nzCheckable="true" nzShowLine="true" nzMultiple="true" (nzCheckBoxChange)="nzCheck($event)">
+      </nz-tree>
+    </nz-modal>
+  </form>
+  <nz-row class="but-group" nzFlex [nzJustify]="'center'" style="margin-top:15px; text-align: center">
+    <button nz-button [nzType]="'primary'" (click)="goBack()">
+      <i class="anticon anticon-rollback"></i>
+      <span>返回</span>
+    </button>
+    <!-- <button nz-button [nzType]="'primary'" (click)="getdetail()">
+      <i class="anticon anticon-search"  ></i>
+      <span>预览</span>
+    </button> -->
+    <button nz-button [nzType]="'primary'" (click)="creatTask(createForm.value)" type="button">
+      <i class="anticon anticon-reload"></i>
+      <span *ngIf="!confirmd">创建</span>
+      <span *ngIf="confirmd">保存</span>
+    </button>
+  </nz-row>
+
+
+
+<!-- 详情弹框 -->
+<!-- <nz-modal nzWidth="700" [(nzVisible)]="isDetail" nzTitle="任务详情" (nzOnCancel)="handleCancel2()" (nzOnOk)="handleOk2()">
+    <nz-row>
+      <nz-col nzSpan="12" style="text-align: right">
+        <span style="color:red;margin-right:2px;">*</span>
+        任务名称:
+      </nz-col>
+      <nz-col nzSpan="12" style="text-align: left;padding-left:10px;">
+      {{previewData.taskName}}
+      </nz-col>
+    </nz-row>
+    <nz-row>
+      <nz-col nzSpan="12" style="text-align: right">
+        <span style="color:red;margin-right:2px;">*</span>
+        选择子表单:
+      </nz-col>
+      <nz-col nzSpan="12" style="text-align: left;padding-left:10px;">
+        {{previewData.selectList}}
+      </nz-col>
+    </nz-row>
+    <nz-row>
+      <nz-col nzSpan="12" style="text-align: right">
+        <span style="color:red;margin-right:2px;">*</span>
+        关联区域:
+      </nz-col>
+      <nz-col nzSpan="12" style="text-align: left;padding-left:10px;">
+        {{previewData.areas}}
+      </nz-col>
+    </nz-row>
+    <nz-row>
+      <nz-col nzSpan="12" style="text-align: right">
+        <span style="color:red;margin-right:2px;">*</span>
+        任务开始时间：
+      </nz-col>
+      <nz-col nzSpan="12" style="text-align: left;padding-left:10px;">
+        {{previewData.taskTime}}
+      </nz-col>
+    </nz-row>
+    <nz-row>
+      <nz-col nzSpan="12" style="text-align: right">
+        <span style="color:red;margin-right:2px;">*</span>
+        是否是紧急任务：
+      </nz-col>
+      <nz-col nzSpan="12" style="text-align: left;padding-left:10px;">
+        {{previewData.isEmergency}}
+      </nz-col>
+    </nz-row>
+    <nz-row>
+      <nz-col nzSpan="12" style="text-align: right">
+        <span style="color:red;margin-right:2px;">*</span>
+        是否需要审批：
+      </nz-col>
+      <nz-col nzSpan="12" style="text-align: left;padding-left:10px;">
+        {{previewData.isApproval}}
+      </nz-col>
+    </nz-row>
+  
+    <nz-row>
+      <nz-col nzSpan="12" style="text-align: right">
+        <span style="color:red;margin-right:2px;">*</span>
+        填报频次：
+      </nz-col>
+      <nz-col nzSpan="12" style="text-align: left;padding-left:10px;">
+        {{previewData.status}}
+      </nz-col>
+    </nz-row>
+    <nz-row>
+      <nz-col nzSpan="12" style="text-align: right">
+        填报提交时间说明：
+      </nz-col>
+      <nz-col nzSpan="12" style="text-align: left;padding-left:10px;">
+        {{previewData.fillData}}
+      </nz-col>
+    </nz-row>
+    <nz-row>
+      <nz-col nzSpan="12" style="text-align: right">
+        附件：
+      </nz-col>
+      <nz-col nzSpan="12" style="text-align: left;padding-left:10px;">
+  
+          <p *ngFor="let item of previewData.accessory" (click)="download(item)" style="cursor:pointer;" title="点击可下载文件">
+            {{item.fileName}}
+          </p>
+      </nz-col>
+    </nz-row>
+  </nz-modal> -->
+</div>

@@ -1,0 +1,145 @@
+<div>
+  <form class="SearchForm" nz-form [formGroup]="searchForm">
+    <nz-row>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9" [nzFor]="'companyName'">企业名称</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <input nz-input placeholder="请输入企业名称" formControlName="companyName" [attr.id]="'companyName'">
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9" [nzFor]="'typeIds'">企业类型</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-select style="width: 100%" formControlName="typeIds" [attr.id]="'typeIds'" [nzPlaceHolder]="'请选择'"
+              nzAllowClear>
+              <nz-option *ngFor="let item of entTypeOpts" [nzLabel]="item.name" [nzValue]="item.id">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9">所在区</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-select style="width: 100%" formControlName="countyCode" [nzPlaceHolder]="'全部'" nzAllowClear>
+              <nz-option *ngFor="let item of districts" [nzLabel]="item.name" [nzValue]="item.id">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzLg="8" nzXl="6" *ngIf="flag2">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9" [nzFor]="'firstTrialStatus'">协会审查状态</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-select style="width: 100%" formControlName="firstTrialStatus" [attr.id]="'firstTrialStatus'"
+              [nzPlaceHolder]="'请选择'" nzAllowClear>
+              <nz-option *ngFor="let item of checkOption" [nzLabel]="item.name" [nzValue]="item.id">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzLg="8" nzXl="6" *ngIf="flag4">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9" [nzFor]="'accountTrialStatus'">会所审查状态</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-select style="width: 100%" formControlName="accountTrialStatus" [attr.id]="'accountTrialStatus'"
+              [nzPlaceHolder]="'请选择'" nzAllowClear>
+              <nz-option *ngFor="let item of checkOption" [nzLabel]="item.name" [nzValue]="item.id">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzLg="8" nzXl="6" *ngIf="flag3">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9" [nzFor]="'lawyerTrialStatus'">律所审查状态</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-select style="width: 100%" formControlName="lawyerTrialStatus" [attr.id]="'lawyerTrialStatus'"
+              [nzPlaceHolder]="'请选择'" nzAllowClear>
+              <nz-option *ngFor="let item of checkOption" [nzLabel]="item.name" [nzValue]="item.id">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzLg="8" nzXl="6" *ngIf="flag5">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9" [nzFor]="'govTrialStatus'">政府审查状态</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-select style="width: 100%" formControlName="govTrialStatus" [attr.id]="'govTrialStatus'"
+              [nzPlaceHolder]="'请选择'" nzAllowClear>
+              <nz-option *ngFor="let item of checkOption" [nzLabel]="item.name" [nzValue]="item.id">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+    </nz-row>
+    <nz-row class="but-group">
+      <button *ngIf="menuList[0].show" nz-button type="button" style="float:left;" [nzType]="'primary'" [routerLink]="[ './create']">
+        <i class="anticon anticon-mail"></i>
+        <span>创建</span>
+      </button>
+      <button nz-button [nzType]="'primary'" (click)="getDataList(searchForm.value)" (keyup.enter)="getDataList(searchForm.value)">
+        <i class="anticon anticon-search"></i>
+        <span>查询</span>
+      </button>
+      <button nz-button [nzType]="'primary'" (click)="resetForm()">
+        <i class="anticon anticon-reload"></i>
+        <span>重置</span>
+      </button>
+
+    </nz-row>
+  </form>
+  <nz-table #groupingTable [nzData]="displayData" [nzTotal]="total" nzBordered nzSize="default" [nzScroll]="{ x:'1800px'}"
+    [(nzPageIndex)]="pageIndex" [(nzPageSize)]="pageSize"  (nzPageIndexChange)="refreshStatus($event)"
+    [nzFrontPagination]="false">
+    <thead>
+      <tr style="height: 46px;">
+        <th rowspan="2">序号</th>
+        <th rowspan="6">企业名称</th>
+        <th rowspan="2">所在区</th>
+        <th rowspan="2" *ngIf="flag2">协会审查状态</th>
+        <!-- <th colspan="6">政府审查</th> -->
+        <th rowspan="2" *ngIf="flag3"> 律所</th>
+        <th rowspan="2" *ngIf="flag3"> 审查状态</th>
+        <th rowspan="2" *ngIf="flag4"> 会所</th>
+        <th rowspan="2" *ngIf="flag4"> 审查状态</th>
+        <th rowspan="2" *ngIf="flag5"> 政府审查人员 </th>
+        <th rowspan="2" *ngIf="flag5"> 审查状态</th>
+        <th rowspan="2" *ngIf="menuList[1].show">操作</th>
+      </tr>
+    </thead>
+    <tbody nz-tbody>
+      <tr nz-tbody-tr *ngFor="let item of groupingTable.data; let i=index;">
+        <td nz-td>{{i+1}}</td>
+        <td nz-td>{{item.res0}}</td>
+        <td nz-td>{{item.res1}}</td>
+        <td nz-td *ngIf="flag2">{{item.firstTrialStatus=='0'?'未分配':(item.firstTrialStatus=='1'?'审查中':(item.firstTrialStatus=='2'?'审查完成':''))}}</td>
+        <td nz-td *ngIf="flag4">{{item.res5}}</td>
+        <td nz-td *ngIf="flag4">{{item.accountTrialStatus=='0'?'未分配':(item.accountTrialStatus=='1'?'审查中':(item.accountTrialStatus=='2'?'审查完成':''))}}</td>
+        <td nz-td *ngIf="flag3">{{item.res4}}</td>
+        <td nz-td *ngIf="flag3">{{item.lawyerTrialStatus=='0'?'未分配':(item.lawyerTrialStatus=='1'?'审查中':(item.lawyerTrialStatus=='2'?'审查完成':''))}}</td>
+        <td nz-td *ngIf="flag5">{{item.res6}}</td>
+        <td nz-td *ngIf="flag5">{{item.govTrialStatus=='0'?'未分配':(item.govTrialStatus=='1'?'审查中':(item.govTrialStatus=='2'?'审查完成':''))}}</td>
+        <td nz-td *ngIf="menuList[1].show">
+          <nz-dropdown>
+            <button nz-button nzType="primary" nz-dropdown><span>操作</span><i class="anticon anticon-down"></i></button>
+            <ul nz-menu>
+              <li nz-menu-item style="text-align: center;" (click)="go_dangan(item.id,'1')">
+
+                核查档案</li>
+            </ul>
+          </nz-dropdown>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <!-- <router-outlet></router-outlet> -->
+</div>

@@ -1,0 +1,162 @@
+<div>
+  <form class="SearchForm" nz-form [formGroup]="createForm">
+    <nz-row nzGutter="16">
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="3">区域</nz-form-label>
+        <nz-form-control nzSpan="4">
+          <!-- <input nz-input placeholder="placeholder" formControlName="provinceCode" [attr.id]="provinceCode"> -->
+          <nz-select style="width: 100%" formControlName="provinceCode" [attr.id]="'provinceCode'" [nzPlaceHolder]="'请选择'"
+            nzAllowClear (ngModelChange)="getCitys($event)">
+            <nz-option *ngFor="let item of provinces" [nzLabel]="item.name" [nzValue]="item.id">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+        <nz-form-control nzSpan="4">
+          <!-- <input nz-input placeholder="placeholder" formControlName="provinceCode" [attr.id]="provinceCode"> -->
+          <nz-select style="width: 100%" formControlName="cityCode" [attr.id]="'cityCode'" [nzPlaceHolder]="'请选择'"
+            nzAllowClear (ngModelChange)="getDistricts($event)">
+            <nz-option *ngFor="let item of citys" [nzLabel]="item.name" [nzValue]="item.id">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+        <nz-form-control nzSpan="4">
+          <!-- <input nz-input placeholder="placeholder" formControlName="provinceCode" [attr.id]="provinceCode"> -->
+          <nz-select style="width: 100%" formControlName="countyCode" [attr.id]="'countyCode'" [nzPlaceHolder]="'请选择'"
+            nzAllowClear (ngModelChange)="getRoads($event)">
+            <nz-option *ngFor="let item of districts" [nzLabel]="item.name" [nzValue]="item.id">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+        <nz-form-control nzSpan="4">
+          <!-- <input nz-input placeholder="placeholder" formControlName="provinceCode" [attr.id]="provinceCode"> -->
+          <nz-select style="width: 100%" formControlName="roadId" [attr.id]="'roadId'" [nzPlaceHolder]="'请选择'"
+            nzAllowClear>
+            <nz-option *ngFor="let item of roads" [nzLabel]="item.name" [nzValue]="item.id">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-row>
+    <nz-row nzGutter="16">
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="3">核查项组</nz-form-label>
+        <nz-form-control nzSpan="21">
+          <!-- <input nz-input placeholder="placeholder" formControlName="provinceCode" [attr.id]="provinceCode"> -->
+          <nz-radio-group formControlName="checkItemGroupId">
+            <label nz-radio *ngFor="let item of groupCheckList" [nzValue]="item.id">{{item.checkItemGroupName}}</label>
+          </nz-radio-group>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-row>
+    <nz-row nzGutter="16">
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="3">核查频率</nz-form-label>
+        <nz-form-control nzSpan="21">
+          <nz-radio-group formControlName="checkFreq">
+            <label nz-radio *ngFor="let item of freq" [nzValue]="item.id">{{item.name}}</label>
+          </nz-radio-group>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-row>
+    <nz-row nzGutter="16">
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="3">核查性质</nz-form-label>
+        <nz-form-control nzSpan="21">
+          <nz-radio-group formControlName="checkProper">
+            <label nz-radio *ngFor="let item of proper" [nzValue]="item.id">{{item.name}}</label>
+          </nz-radio-group>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-row>
+    <nz-row nzGutter="16">
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="3">企业类型</nz-form-label>
+        <nz-form-control nzSpan="21">
+          <nz-radio-group formControlName="companyType" (ngModelChange)="selectCheckOpiton($event)">
+            <label nz-radio *ngFor="let item of companytpyes" [nzValue]="item.id">{{item.name}}</label>
+          </nz-radio-group>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-row>
+    <nz-row nzGutter="16">
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="3">任务时间</nz-form-label>
+        <nz-form-control nzSpan="21">
+          <nz-date-picker formControlName="startTime" (ngModelChange)="onChange($event)"  ></nz-date-picker>
+          ~
+          <nz-date-picker formControlName="endTime" (ngModelChange)="onChange($event)"  
+            nzDisabled></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-row>
+    <nz-row nzGutter="16" class="create-table">
+      <nz-col nzSpan="12">
+        <nz-table #nzTable1 [nzFrontPagination]="false" [nzBordered]="true" [nzShowPagination]="false" [nzData]="enterList"
+          [nzPageSize]="10" [nzScroll]="{y: '340px' }"  (nzCurrentPageDataChange)="currentPageDataChange($event)">
+          <thead>
+            <tr>
+              <th nzShowCheckbox [(nzChecked)]="allChecked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAll($event)"></th>
+              <th nzWidth="450px">
+                企业名称:
+                <input style="width:150px;margin-right:10px;" formControlName="companyName" nz-input placeholder='请输入搜索内容'
+                  nzSize="default">
+                <button nz-button [nzType]="'primary'" (click)="getEnterList(createForm.value)" (keyup.enter)="getEnterList(createForm.value)">
+                  <span>查询</span>
+                </button>
+              </th>
+              <th>注册地址</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of nzTable1.data">
+              <td nzShowCheckbox [(nzChecked)]="data.checked" [nzDisabled]="data.disabled" (nzCheckedChange)="refreshStatus()">
+              </td>
+              <td>{{data.name}}</td>
+              <td>{{data.registrationAddress}}</td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </nz-col>
+      <nz-col nzSpan="12">
+        <nz-table #nzTable [nzFrontPagination]="false" [nzBordered]="true" [nzShowPagination]="false" [nzData]="userLists"
+          [nzScroll]="{ y: '340px' }" [nzLoading]="isloading1" (nzCurrentPageDataChange)="currentPageDataChange1($event)">
+          <thead>
+            <tr>
+              <!-- <th nzWidth="62px"> 核查人 </th> -->
+              <th nzShowCheckbox [(nzChecked)]="allChecked1" [nzIndeterminate]="indeterminate1" (nzCheckedChange)="checkAll1($event)"></th>
+              <th nzWidth="400px">核查人:
+                <input style="width:150px;margin-right:10px;" nz-input placeholder="请输入搜索内容" nzSize="default"
+                  formControlName="peoName">
+                <button nz-button [nzType]="'primary'" (click)="getUserList(createForm.value)" (keyup.enter)="getUserList(createForm.value)">
+                  <span>查询</span>
+                </button>
+              </th>
+              <th>市</th>
+              <th>区</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of nzTable.data">
+              <td nzShowCheckbox [(nzChecked)]="data.checked" [nzDisabled]="data.disabled" (nzCheckedChange)="refreshStatus1()">
+              </td>
+              <td>{{data.name}}</td>
+              <td>{{data.provinceName}}</td>
+              <td>{{data.districtName}}</td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </nz-col>
+    </nz-row>
+  </form>
+
+  <nz-row nzGutter="8" class="btn-group">
+    <button nz-button [nzType]="'primary'" (click)="goBack()">
+      <i class="anticon anticon-rollback"></i>
+      <span>返回</span>
+    </button>
+    <button nz-button [nzType]="'primary'" (click)="create(createForm.value)">
+      <i class="anticon anticon-reload"></i>
+      <span>创建</span>
+    </button>
+  </nz-row>
+</div>

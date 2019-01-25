@@ -1,0 +1,164 @@
+<div>
+  <form nz-form [formGroup]="searchForm">
+    <nz-row>
+      <nz-col nzLg='8' nzXl='6'>
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan='9'>企业名称</nz-form-label>
+          <nz-form-control nzSpan='15'>
+            <nz-col>
+              <input nz-input formControlName='companysName'>
+            </nz-col>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzLg='8' nzXl='6'>
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan='9'>审查状态</nz-form-label>
+          <nz-form-control nzSpan='15'>
+            <nz-select style='width: 100%' formControlName='status' [attr.id]='"statues"' [nzPlaceHolder]='"请选择"'
+              nzAllowClear>
+              <nz-option *ngFor='let item of reformState' [nzLabel]='item.name' [nzValue]='item.id'></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzLg='8' nzXl='6'>
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan='9'>整改通知书</nz-form-label>
+          <nz-form-control nzSpan='15'>
+            <nz-select style='width: 100%' formControlName='hasReform' [attr.id]='"hasReform"' [nzPlaceHolder]='"请选择"'
+              nzAllowClear>
+              <nz-option nzLabel='收到' nzValue='1'></nz-option>
+              <nz-option nzLabel='未收到' nzValue='0'></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzLg='8' nzXl='6'>
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan='9'>完整提交</nz-form-label>
+          <nz-form-control nzSpan='15'>
+            <nz-select style='width: 100%' formControlName='statusMark' [attr.id]='"statusMark"' [nzPlaceHolder]='"请选择"'
+              nzAllowClear>
+              <nz-option nzLabel='完整' nzValue='0'></nz-option>
+              <nz-option nzLabel='不完整' nzValue='3'></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzLg='8' nzXl='6'>
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan='9'>资金规模</nz-form-label>
+          <nz-form-control nzSpan='15'>
+            <nz-select style='width: 100%' formControlName='fundSize' [attr.id]='"fundSize"' [nzPlaceHolder]='"请选择"'
+              nzAllowClear>
+              <nz-option *ngFor='let item of foundList' [nzLabel]='item' [nzValue]='item'></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+    </nz-row>
+
+    <nz-row class="but-group" style="text-align:right;">
+      <button nz-button [nzType]="'primary'" (click)="getList()" (keyup.enter)="getList()">
+        <i class="anticon anticon-search"></i>
+        <span>查询</span>
+      </button>
+      <button nz-button [nzType]="'primary'" (click)="resetForm()">
+        <i class="anticon anticon-reload"></i>
+        <span>重置</span>
+      </button>
+    </nz-row>
+  </form>
+  <nz-table class="margin-top15" #rowSelectionTable [nzFrontPagination]="false" [nzData]="data" [nzTotal]="total"
+    [(nzPageIndex)]="pageIndex" [nzPageSize]="10" (nzPageIndexChange)="getList()">
+    <thead>
+      <tr>
+        <th>序号</th>
+        <th>企业名称</th>
+        <th>企业地址</th>
+        <th>联系方式</th>
+        <th>是否收到整改通知书</th>
+        <th>是否完整提交</th>
+        <th>资金规模</th>
+        <th>审查状态</th>
+        <!-- <th *ngIf="isTrial">审查结果</th> -->
+
+        <th *ngIf="flag2&&isGov">协会审查状态</th>
+        <th *ngIf="flag4&&isGov">会所审查状态</th>
+        <th *ngIf="flag3&&isGov">律所审查状态</th>
+        <th nzWidth="200px" *ngIf="menuList[0].show||menuList[1].show">操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of rowSelectionTable.data;let i = index;">
+        <td>{{i+1}}</td>
+        <td>{{data.res0}}</td>
+        <td>{{data.address}}</td>
+        <td>{{data.phone}}</td>
+        <td>{{data.reformBook?'收到':'未收到'}}</td>
+        <td>{{data.statusMark ==3?'不完整':'完整'}}</td>
+        <td>{{data.fundSize}}</td>
+        <td *ngIf="isAccount">{{data.accountTrialStatus=='0'?'未分配':(data.accountTrialStatus=='1'?'审查中':(data.accountTrialStatus=='2'?'审查完成':''))}}</td>
+        <td *ngIf="isLawyer">{{data.lawyerTrialStatus=='0'?'未分配':(data.lawyerTrialStatus=='1'?'审查中':(data.lawyerTrialStatus=='2'?'审查完成':''))}}</td>
+        <td *ngIf="isTrial">{{data.firstTrialStatus=='0'?'未分配':(data.firstTrialStatus=='1'?'审查中':(data.firstTrialStatus=='2'?'审查完成':''))}}</td>
+        <td *ngIf="isGov">{{data.govTrialStatus=='0'?'未分配':(data.govTrialStatus=='1'?'审查中':(data.govTrialStatus=='2'?'审查完成':''))}}</td>
+        <!-- <td *ngIf="isTrial">{{data.firstTrialStatus!="2"?' ':(data.firstTrialStatus=='0'? '通过':(data.firstTrialStatus=='1'? '补充材料':(data.firstTrialStatus=="2"? '不通过':'')))}}</td> -->
+        <td *ngIf="flag2&&isGov">{{data.firstTrialStatus=='0'?'未分配':(data.firstTrialStatus=='1'?'审查中':(data.firstTrialStatus=='2'?'审查完成':''))}}</td>
+        <td *ngIf="flag4&&isGov">{{data.accountTrialStatus=='0'?'未分配':(data.accountTrialStatus=='1'?'审查中':(data.accountTrialStatus=='2'?'审查完成':''))}}</td>
+        <td *ngIf="flag3&&isGov">{{data.lawyerTrialStatus=='0'?'未分配':(data.lawyerTrialStatus=='1'?'审查中':(data.lawyerTrialStatus=='2'?'审查完成':''))}}</td>
+        <td *ngIf="menuList[0].show||menuList[1].show">
+          <nz-dropdown [nzPlacement]="'bottomCenter'">
+            <button nz-button nz-dropdown [nzType]="'primary'"><span>操作</span><i class="anticon anticon-down"></i></button>
+            <ul nz-menu>
+              <li nz-menu-item style="text-align: center;" *ngIf="menuList[0].show&&isGov">
+                <button nz-button [nzType]="'primary'" class="dealButton" (click)="openDetail(data.id)" [disabled]='data.govTrialStatus=="2"'>
+                  审核
+                </button>
+              </li>
+              <li nz-menu-item style="text-align: center;" *ngIf="menuList[0].show&&isAccount">
+                <button nz-button [nzType]="'primary'" class="dealButton" (click)="openDetail(data.id)" [disabled]='data.accountTrialStatus=="2"'>
+                  审核
+                </button>
+              </li>
+              <li nz-menu-item style="text-align: center;" *ngIf="menuList[0].show&&isLawyer">
+                <button nz-button [nzType]="'primary'" class="dealButton" (click)="openDetail(data.id)" [disabled]='data.lawyerTrialStatus=="2"'>
+                  审核
+                </button>
+              </li>
+              <li nz-menu-item style="text-align: center;" *ngIf="menuList[0].show&&isTrial">
+                <button nz-button [nzType]="'primary'" class="dealButton" (click)="openDetail(data.id)" [disabled]='data.firstTrialStatus=="2"'>
+                  审核
+                </button>
+              </li>
+              <li nz-menu-item style="text-align: center;" *ngIf='menuList[1].show&&isGov'>
+                <button nz-button [nzType]="'primary'" class="dealButton" (click)="openDetail(data.id,'only')"
+                  [disabled]='data.govTrialStatus!="2"'>
+                  详情
+                </button>
+              </li>
+              <li nz-menu-item style="text-align: center;" *ngIf='menuList[1].show&&isAccount'>
+                <button nz-button [nzType]="'primary'" class="dealButton" (click)="openDetail(data.id,'only')"
+                  [disabled]='data.accountTrialStatus!="2"'>
+                  详情
+                </button>
+              </li>
+              <li nz-menu-item style="text-align: center;" *ngIf='menuList[1].show&&isLawyer'>
+                <button nz-button [nzType]="'primary'" class="dealButton" (click)="openDetail(data.id,'only')"
+                  [disabled]='data.lawyerTrialStatus!="2"'>
+                  详情
+                </button>
+              </li>
+              <li nz-menu-item style="text-align: center;" *ngIf='menuList[1].show&&isTrial'>
+                <button nz-button [nzType]="'primary'" class="dealButton" (click)="openDetail(data.id,'only')"
+                  [disabled]='data.firstTrialStatus!="2"'>
+                  详情
+                </button>
+              </li>
+            </ul>
+          </nz-dropdown>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>

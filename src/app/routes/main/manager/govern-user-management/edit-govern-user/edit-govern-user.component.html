@@ -1,0 +1,168 @@
+<form class="SearchForm" nz-form [formGroup]="editForm">
+  <nz-row nzGutter="16">
+    <nz-col nzLg="24" nzXl="24">
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="5" nzFor="'roleIds'" nzRequired>角色名称</nz-form-label>
+        <nz-form-control nzSpan="19">
+          <nz-select style="width: 100%;" [nzMode]="'multiple'" [attr.id]="'roleIds'" [nzPlaceHolder]="'请选择'"
+            nzAllowClear formControlName="jsmc" (ngModelChange)="selsectMultiple($event)">
+            <nz-option *ngFor="let item of roleList" [nzLabel]="item.name" [nzValue]="item.id">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+  </nz-row>
+  <nz-row nzGutter="16">
+    <nz-col nzLg="12" nzXl="12">
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="10" nzRequired>用户名</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <input nz-input formControlName="loginName" disabled>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+    <nz-col nzLg="12" nzXl="12">
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="10" nzRequired>职位</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <input nz-input formControlName="job">
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+  </nz-row>
+  <nz-row nzGutter="16">
+    <nz-col nzLg="12" nzXl="12">
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="10" nzRequired>姓名</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <input nz-input formControlName="name">
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+    <nz-col nzLg="12" nzXl="12">
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="10">手机号</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <input nz-input formControlName="phoneCode">
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+  </nz-row>
+  <nz-row nzGutter="16">
+    <nz-col nzLg="12" nzXl="12">
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="10" nzRequired>所属机构</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <nz-cascader [nzChangeOnSelect]="true" formControlName="orgIds" [nzPlaceHolder]="'所属机构'" (nzSelectionChange)="agencyChange($event)"
+            [nzOptions]="loadData" (nzSelect)="getAgency($event)">
+          </nz-cascader>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+    <nz-col nzLg="12" nzXl="12">
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="10" nzRequired>邮箱</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <input nz-input formControlName="email">
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+  </nz-row>
+  <nz-row nzGutter="16">
+    <nz-col nzLg="12" nzXl="12">
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="10" [nzFor]="'provinceId'" nzRequired>管辖区域</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <nz-select style="width: 100%" formControlName="provinceId" [attr.id]="'provinceId'" [nzPlaceHolder]="'请选择'"
+            nzAllowClear (ngModelChange)="getCitys($event)" [nzDisabled]="provinceIdFlag">
+            <nz-option *ngFor="let item of provinces" [nzLabel]="item.name" [nzValue]="item.id">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+    <nz-col nzLg="12" nzXl="12">
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="10" [nzFor]="'cityId'" nzRequired>市</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <nz-select style="width: 100%" formControlName="cityId" [attr.id]="'cityId'" [nzPlaceHolder]="'请选择'"
+            nzAllowClear (ngModelChange)="getDistricts($event)" [nzDisabled]="cityIdFlag">
+            <nz-option *ngFor="let item of citys" [nzLabel]="item.name" [nzValue]="item.id">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+    <nz-col nzLg="12" nzXl="12">
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="10" [nzFor]="'districtId'">区</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <nz-select style="width: 100%" formControlName="districtId" [attr.id]="'districtId'" [nzPlaceHolder]="'请选择'"
+            nzAllowClear (ngModelChange)="getRoads($event)" [nzDisabled]="districtIdFlag">
+            <nz-option *ngFor="let item of districts" [nzLabel]="item.name" [nzValue]="item.id">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+    <nz-col nzLg="12" nzXl="12">
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="10" [nzFor]="'roadId'">街道</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <nz-select style="width: 100%" formControlName="roadId" [attr.id]="'roadId'" [nzPlaceHolder]="'请选择'"
+            nzAllowClear  [nzDisabled]="roadIdFlag">
+            <nz-option *ngFor="let item of roadIds" [nzLabel]="item.name" [nzValue]="item.id">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+  </nz-row>
+  <nz-row>
+    <nz-col nzLg="24" nzXl="24">
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="5" nzFor="'typeIds'" nzRequired>管理类型</nz-form-label>
+        <nz-form-control nzSpan="19">
+          <nz-col nzSpan="8">
+            <label nz-checkbox formControlName="allChecked" (ngModelChange)="updateAllChecked($event)"
+              [nzIndeterminate]="indeterminate">全选</label>
+          </nz-col>
+          <nz-checkbox-wrapper style="width: 100%;" [attr.id]="'typeIds'" (nzOnChange)="selectCheckOpiton($event)">
+            <div nz-row>
+              <div nz-col nzSpan="8" *ngFor="let item of TypeList" >
+                <label nz-checkbox [nzChecked]="item.checked" [nzValue]="item.id">{{item.name}}</label>
+              </div>
+            </div>
+          </nz-checkbox-wrapper>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+  </nz-row>
+  <nz-row nzGutter="16">
+    <nz-col nzLg="24" nzXl="24">
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="5">查看工作台账</nz-form-label>
+        <nz-form-control nzSpan="19">
+          <nz-radio-group formControlName="userRecordSee">
+            <label nz-radio [nzValue]="1">是</label>
+            <label nz-radio [nzValue]="0">否</label>
+          </nz-radio-group>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+  </nz-row>
+</form>
+<div class="customize-footer " style="height:40px;
+    padding: 20px 0 30px 0;border-top: 1px solid #e8e8e8;margin-top:25px">
+  <div nz-col [nzSpan]="12" style="text-align:center">
+    <button nz-button [nzType]="'primary'" (click)="handleCancel()">
+      返 回
+    </button>
+  </div>
+  <div nz-col [nzSpan]="12" style="text-align:center">
+    <button nz-button [nzType]="'primary'" (click)="modifyPriseUser(editForm.value)">
+      确定
+    </button>
+  </div>
+</div>

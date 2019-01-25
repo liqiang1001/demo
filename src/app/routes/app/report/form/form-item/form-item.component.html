@@ -1,0 +1,42 @@
+<div nz-row nzGutter="8">
+  <div nz-col [nzSpan]="!!item.constrainFields?6:12" style="text-align: right">
+    <p *ngIf="item.must == '1'" style="font-weight:bold;">
+      <span style="color:red;">*</span> {{item.showName}} ：
+    </p>
+    <p *ngIf="item.must != '1'">
+      {{item.showName}} ：
+    </p>
+  </div>
+  <div nz-col [nzSpan]="!!item.constrainFields?4:8">
+    <!-- 字符串 -->
+    <input *ngIf="item.type == 1" autocomplete="off" [disabled]="State" nz-input [ngModel]="item.value" (ngModelChange)="valChange($event)"
+      id="name" name="name" placeholder="">
+    <!-- 文件上传 -->
+
+    <button *ngIf="item.type == 2" nz-button nzSize="small" (click)="createFileModal()" nzType="primary">
+      <i nz-icon type="upload"></i>
+      <span *ngIf="fileLength == 0">上传</span>
+      <span *ngIf="fileLength != 0">{{fileLength}}个文件</span>
+    </button>
+    <!-- </nz-upload> -->
+    <!-- 时间选择 -->
+    <nz-date-picker *ngIf="item.type == 3" style="width: 100%" [nzDisabled]="State" [ngModel]="item.value"
+      (ngModelChange)="valChange($event)" name="value" nzPlaceHolder="请选择"></nz-date-picker>
+    <!-- 整数值 -->
+    <nz-input-number *ngIf="item.type == 4" style="width: 100%" [nzDisabled]="State" [ngModel]="item.value"
+      (ngModelChange)="valChange($event)" [nzMin]="1" [nzStep]="1"></nz-input-number>
+    <!-- 单选 -->
+    <nz-select *ngIf="item.type == 5" style="width: 100%" [nzDisabled]="State" [ngModel]="item.value" (ngModelChange)="valChange($event)"
+      nzAllowClear nzPlaceHolder="请选择">
+      <nz-option *ngFor="let option of DictOpts" [nzDisabled]="State" [nzLabel]="option.name" [nzValue]="option.id"></nz-option>
+    </nz-select>
+    <!-- 小数型 -->
+    <nz-input-number *ngIf="item.type == 6" [nzDisabled]="State" style="width: 100%" [ngModel]="item.value" (nzBlur)="log($event)"
+      (ngModelChange)="valChange($event)" [nzMin]="0.0001" [nzStep]="1"></nz-input-number>
+    <!-- 多选 -->
+    <nz-select *ngIf="item.type == 7" [nzMaxMultipleCount]="9" [nzDisabled]="State" style="width: 100%" nzMode="multiple"
+      nzPlaceHolder="请选择" [ngModel]="item.value" (ngModelChange)="valChange($event)">
+      <nz-option *ngFor="let option of DictOpts" [nzLabel]="option.name" [nzValue]="option.id"></nz-option>
+    </nz-select>
+  </div>
+</div>

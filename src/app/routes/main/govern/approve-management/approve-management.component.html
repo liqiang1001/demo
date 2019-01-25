@@ -1,0 +1,132 @@
+<div>
+  <form class="SearchForm" nz-form [formGroup]="searchForm">
+    <nz-row>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9">公司名称</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-col>
+              <input nz-input formControlName="entName">
+            </nz-col>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9">审批结果</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-select style="width: 100%" formControlName="auditResult" [nzPlaceHolder]="'请选择'" nzAllowClear>
+              <nz-option *ngFor="let item of resultOptions" [nzLabel]="item.name" [nzValue]="item.val">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9">申请变更表单</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <input nz-input formControlName="requestChangeInfo">
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9">申请时间</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-range-picker formControlName="Time" nzPlaceHolder="请选择" [nzShowTime]="false"></nz-range-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9">审批状态</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-select style="width: 100%" formControlName="auditStatus" [nzPlaceHolder]="'请选择'" nzAllowClear>
+              <nz-option *ngFor="let item of statusOptions" [nzLabel]="item.name" [nzValue]="item.val">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+    </nz-row>
+    <nz-row class="but-group" style="margin-top:20px">
+      <button *ngIf="menuList[0].show" style="float: left" nz-button [nzType]="'primary'" [disabled]="!(currentItem.idList.length > 0)" (click)="multAudit()">
+        <i nz-icon type="switcher" theme="outline"></i>
+        <span>批量审批</span>
+      </button>
+      <button nz-button [nzType]="'primary'" (click)="getDataList(searchForm.value)" (keyup.enter)="getDataList(searchForm.value)">
+        <i class="anticon anticon-search"></i>
+        <span>查询</span>
+      </button>
+      <button nz-button [nzType]="'primary'" (click)="resetForm()">
+        <i class="anticon anticon-reload"></i>
+        <span>重置</span>
+      </button>
+     
+    </nz-row>
+  </form>
+  <nz-table #rowSelectionTable [nzData]="data" (nzPageIndexChange)="changePage($event)" [nzTotal]="total"
+    [(nzPageIndex)]="pageIndex" nzPageSize="10" [nzFrontPagination]="false">
+    <thead>
+      <tr>
+        <th nzShowCheckbox [(nzChecked)]="allChecked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAll($event)"></th>
+        <th>序号</th>
+        <th>公司名称</th>
+        <th>申请时间</th>
+        <th>申请人</th>
+        <th>申请变更表单</th>
+        <th>申请原因</th>
+        <th>审批状态</th>
+        <th>审批结果</th>
+        <th>审批人</th>
+        <th>审批时间</th>
+        <th *ngIf="menuList[1].show">操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of rowSelectionTable.data;let i = index;">
+        <td nzShowCheckbox [(nzChecked)]="data.checked" [nzDisabled]="data.auditStatus == 1" (click)="refreshStatus()"></td>
+        <td>{{i+1}}</td>
+        <td>{{data.entName}}</td>
+        <td>{{data.createDate | date:'y-MM-dd'}}</td>
+        <td>{{data.proposerName}}</td>
+        <td>{{data.requestChangeInfo}}</td>
+        <td>{{data.requestCause}}</td>
+        <td>{{data.auditStatus == '0'?'待审批':'已审批'}}</td>
+        <td>{{data.auditResult == '0'?'驳回': (data.auditResult == null ?'':'同意')}}</td>
+        <td>{{data.auditUserId}}</td>
+        <td>{{data.auditDate | date:'y-MM-dd'}}</td>
+        <td *ngIf="menuList[1].show">
+          <button (click)="checkDetail(data)" nz-button nzType="primary">详情</button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <nz-modal [(nzVisible)]="isVisible" nzTitle="审批详情" (nzOnCancel)="handleCancel()" [nzFooter]="modalFooter">
+    <nz-row nzGutter="8">
+      <nz-col nzSpan="6">
+        审批人意见：
+      </nz-col>
+      <nz-col nzSpan="18">
+        <nz-radio-group [disabled]="isShow" [(ngModel)]="currentItem.auditResult">
+          <label nz-radio [nzValue]="1">同意</label>
+          <label nz-radio [nzValue]="0">不同意</label>
+        </nz-radio-group>
+      </nz-col>
+    </nz-row>
+    <nz-row nzGutter="8" class="margin-top15">
+      <nz-col nzSpan="6">
+        备注：
+      </nz-col>
+
+      <nz-col nzSpan="18">
+        <textarea nz-input [disabled]="isShow" [(ngModel)]="currentItem.remark" style="height:70px;"></textarea>
+      </nz-col>
+    </nz-row>
+    <ng-template #modalFooter>
+      <button nz-button nzType="default" (click)="handleCancel()">取消</button>
+      <button *ngIf="!isShow" nz-button nzType="primary" (click)="handleOk()">确定</button>
+    </ng-template>
+  </nz-modal>
+</div>

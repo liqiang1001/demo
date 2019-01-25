@@ -1,0 +1,19 @@
+<div nz-row>
+  <div class="file">
+    <nz-upload [nzAction]="URL"
+      [nzPreview]="preview" 
+      [nzShowButton]="!state"
+      [nzShowUploadList]="{ showPreviewIcon: true, showRemoveIcon: !state }"
+      [(nzFileList)]="fileList">
+    <button nz-button>
+      <i nz-icon type="upload"></i>
+      <span>选择文件</span>
+    </button>
+  </nz-upload>
+  </div>
+  <div nz-row class="margin-top15" nzType="flex" nzJustify="center">
+    <button nzType="primary" (click)="destroyModal()" nz-button>确定</button>
+    <button nzType="default" (click)="cancelModal()" nz-button>取消</button>
+
+  </div>
+</div>

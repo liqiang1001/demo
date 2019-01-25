@@ -1,0 +1,91 @@
+<div>
+  <form nz-form [formGroup]="searchForm">
+    <nz-row nzGutter="8">
+      <nz-col nzLg='8' nzXl='6'>
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan='9'>企业名称</nz-form-label>
+          <nz-form-control nzSpan='15'>
+            <nz-col>
+              <input nz-input formControlName='orgName'>
+            </nz-col>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzLg='8' nzXl='6'>
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan='9'>平台名称</nz-form-label>
+          <nz-form-control nzSpan='15'>
+            <nz-col>
+              <input nz-input formControlName='plaName'>
+            </nz-col>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzLg='8' nzXl='6'>
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan='9'>推送时间</nz-form-label>
+          <nz-form-control nzSpan='15'>
+            <nz-range-picker formControlName='updateTime' nzPlaceHolder="请选择" nzShowTime></nz-range-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+    </nz-row>
+    <nz-row class="btn-group" style="text-align:right;" nzGutter="8">
+      <button nz-button [nzType]="'primary'" (click)="getList()" (keyup.enter)="getList()">
+        <i class="anticon anticon-search"></i>
+        <span>查询</span>
+      </button>
+      <button nz-button [nzType]="'primary'" (click)="resetForm()">
+        <i class="anticon anticon-reload"></i>
+        <span>重置</span>
+      </button>
+    </nz-row>
+  </form>
+  <nz-table class="margin-top15" #nzTable [nzData]="data" [nzPageSize]="10" [nzFrontPagination]="false" [nzTotal]="total"
+    [(nzPageIndex)]="pageIndex" (nzPageIndexChange)="getList()">
+    <thead>
+      <tr>
+        <th colspan="2">风险预警</th>
+        <th colspan="5" class="special-thead-color">基本信息</th>
+        <th colspan="2">风险分类</th>
+      </tr>
+      <tr>
+        <th>风险项目</th>
+        <th>推送时间</th>
+        <th class="special-thead-color" width="250px">企业名称</th>
+        <th class="special-thead-color">平台名称</th>
+        <th class="special-thead-color" width="250px">注册地址</th>
+        <th class="special-thead-color">联系人</th>
+        <th class="special-thead-color">联系电话</th>
+        <th>风险类型</th>
+        <th>风险依据</th>
+      </tr>
+    </thead>
+    <tbody nz-tbody>
+      <ng-container *ngFor="let data of nzTable.data;index as i;">
+        <tr nz-tbody-tr>
+          <td [attr.rowspan]="data.type.length" nz-td>{{data.riskProject}}</td>
+          <td [attr.rowspan]="data.type.length" nz-td>{{data.updateTime | date:"yyyy-MM-dd"}}</td>
+          <td [attr.rowspan]="data.type.length" nz-td><a [href]="BI_IP+'/bi?name=entinfo.frm&sign='+ token + '&userId='+data.enterpriseId"
+              target="_blank">{{data.orgName}}</a></td>
+          <td [attr.rowspan]="data.type.length" nz-td>{{data.plaName}}</td>
+          <td [attr.rowspan]="data.type.length" nz-td>{{data.regAddress}}</td>
+          <td [attr.rowspan]="data.type.length" nz-td>{{data.name}}</td>
+          <td [attr.rowspan]="data.type.length" nz-td>{{data.phone}}</td>
+          <td nz-td>{{data.type[0]}}</td>
+          <td nz-td>
+            <p *ngFor="let i of data.accord[0]"><a [href]="i" target="_blank">风险依据详情</a></p>
+          </td>
+        </tr>
+        <ng-container *ngFor="let line of nzTable.data[i].type;index as j">
+          <tr nz-tbody-tr *ngIf="j !== 0">
+            <td nz-td>{{line}}</td>
+            <td nz-td>
+              <span *ngFor="let i of data.accord[j]">{{i}}</span>
+            </td>
+          </tr>
+        </ng-container>
+      </ng-container>
+    </tbody>
+  </nz-table>
+</div>

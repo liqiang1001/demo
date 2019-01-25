@@ -1,0 +1,42 @@
+:host{
+    display: block;
+    height: calc(100vh - 95px);
+    background: #fff;
+   
+    & ::ng-deep .ant-tabs-nav .ant-tabs-tab{
+        margin-right: 10px;
+    }
+    .container{
+        padding: 20px;
+        height: 100%;
+        .checkself{
+            .checkself-item{
+                margin-bottom: 25px;
+                .label{
+                    text-align: right;
+                    span{
+                        color: #f00;
+                    }
+                }
+                .info{
+                    padding-left: 25px !important;
+                    .tip{
+                        color: #2184fb;
+                    }
+                }
+            }
+            .desc{
+                color: #f00;
+                p{
+                    &:first-of-type{
+                        text-indent: 0;
+                    }
+                    text-indent: 2em;
+                }
+            }
+        }
+    }
+    .red{
+        color: #f00;
+    }
+}

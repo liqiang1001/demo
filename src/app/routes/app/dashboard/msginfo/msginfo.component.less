@@ -1,0 +1,52 @@
+.msg-box{
+    padding: 15px;
+    .msg-count{
+        span{
+            color:#f60;
+            font-weight: bold;
+        }
+    }
+    .msg-item{
+        height: 66px;
+        cursor: pointer;
+        background: #fff;
+        box-shadow: 1px 1px 6px #ccc;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        padding: 0 10px;
+        justify-content: space-between;
+        &:hover{
+            background-color: #54b9ff;
+            color: #fff;
+            .circle-icon{
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                &::after{
+                    display: block;
+                    content: '';
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 50%;
+                    background-color: #fff;
+                }
+            }
+        }
+        .circle-icon{
+            display: inline-block;
+            width: 46px;
+            height: 46px;
+            vertical-align: middle;
+            background: url(/assets/image/log-1.png) no-repeat center center;
+        }
+        .flash-icon{
+            width: 41px;
+            height: 41px;
+        }
+        .msg-time{
+            text-align: right;
+        }
+    }
+}

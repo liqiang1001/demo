@@ -1,0 +1,109 @@
+<div *ngIf="clueInfo">
+  <nz-row nzGutter="8">
+    <nz-col nzSpan="2" >
+      企业名称：
+    </nz-col>
+    <nz-col nzSpan="20" >
+      {{clueInfo.companyName}}
+    </nz-col>
+  </nz-row>
+  <nz-row nzGutter="8">
+    <nz-col nzSpan="2" >
+      核查时间：
+    </nz-col>
+    <nz-col nzSpan="20" >
+      {{clueInfo.createTime | date: 'yyyy-MM-dd'}}
+    </nz-col>
+  </nz-row>
+  <nz-row nzGutter="8">
+    <nz-col nzSpan="2" >
+      文件浏览：
+    </nz-col>
+    <nz-col nzSpan="20" >
+      <button nz-button [nzType]="'primary'" (click)="fileOpen()">
+        <span>文件列表</span>
+    </button>
+    </nz-col>
+  </nz-row>
+  <nz-row nzGutter="8">
+    <nz-col nzSpan="2" >
+      处理状态：
+    </nz-col>
+    <nz-col nzSpan="20" >
+      <nz-radio-group [(ngModel)]="clueInfo.treatStatue">
+        <label nz-radio nzValue="0">待处理</label>
+        <label nz-radio nzValue="1">已处理</label>
+      </nz-radio-group>
+    </nz-col>
+  </nz-row>
+  <nz-row nzGutter="8">
+    <nz-col nzSpan="2" >
+      线索分类：
+    </nz-col>
+    <nz-col nzSpan="20" >
+      <nz-radio-group [(ngModel)]="clueInfo.threadLevel">
+        <label nz-radio nzValue="0">无需关注</label>
+        <label nz-radio nzValue="2">严重</label>
+        <label nz-radio nzValue="1">一般</label>
+      </nz-radio-group>
+    </nz-col>
+  </nz-row>
+  <nz-row nzGutter="8">
+    <nz-col nzSpan="2" >
+      附件上传：
+    </nz-col>
+    <nz-col nzSpan="20" >
+      <button (click)="upload()"  nz-button nzType="primary">上传材料</button>
+    </nz-col>
+  </nz-row>
+  <nz-row nzGutter="8">
+    <nz-col nzSpan="2" >
+      处理意见：
+    </nz-col>
+    <nz-col nzSpan="20" >
+      <nz-radio-group [(ngModel)]="clueInfo.result">
+        <label nz-radio nzValue="0">未处理</label>
+        <label nz-radio nzValue="1">严重</label>
+        <label nz-radio nzValue="2">处理严重</label>
+        <label nz-radio nzValue="3">一般</label>
+      </nz-radio-group>
+    </nz-col>
+  </nz-row>
+  <nz-row nzGutter="8" style="text-align:center;">
+    <button (click)="postData()" nz-button nzType="primary">提交</button>
+  </nz-row>
+  <nz-modal [(nzVisible)]="isVisible" [nzTitle]="modalTitle1" [nzContent]="modalContent1" [nzFooter]="modalFooter1" (nzOnCancel)="handleCancel()">
+    <ng-template #modalTitle1>
+      文件上传
+    </ng-template>
+
+    <ng-template #modalContent1>
+      <nz-row nzGutter="8">
+        <nz-upload [nzCustomRequest]="change" [nzAccept]="application/pdf" [nzFileList]="[]" [nzShowButton]="!only" [nzShowUploadList]="false">
+          <button nz-button>
+            <i class="anticon anticon-upload"></i>
+            <span>点击上传</span>
+          </button>
+        </nz-upload>
+        <nz-progress *ngIf="progress < 100 && progress > 0" [nzPercent]="progress" nzSize="small"></nz-progress>
+      </nz-row>
+      <p *ngFor="let item of upfiles">{{item.name}}  {{item.createTime | date:'yyyy-MM-dd'}} <a (click)="preview(item.url)">预览</a> <a style="margin-left: 15px;color:red;" *ngIf="!only" (click)="delFile(item)">删除</a></p>
+    </ng-template>
+
+    <ng-template #modalFooter1>
+      <button nz-button nzType="primary" (click)="handleOk()" [nzLoading]="isConfirmLoading">确认</button>
+    </ng-template>
+  </nz-modal>
+</div>
+
+
+<!-- 幻灯片 -->
+<nz-modal nzWidth="700" [(nzVisible)]="isImage" nzTitle="文件预览" nzFooter=" " (nzOnCancel)="handleCancel2()">
+  <h2 style="font-size:16px;">图片:</h2>
+  <div style="width:100%;display: flex;flex-wrap: wrap;">
+      <div style="width:29%;height:200px;padding:10px 2.5%;display:inline-block;" *ngFor="let item of demoFiles1">
+        <img [src]="item.url" alt="" style="width:100%;height:100%">
+      </div>
+  </div>
+
+</nz-modal>

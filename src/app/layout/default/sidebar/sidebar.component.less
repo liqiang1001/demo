@@ -1,0 +1,30 @@
+.point{
+    background-color: #666;
+    display: inline-block;
+    border-radius: 50%;
+    width: 4px;
+    height: 4px;
+    margin: 0 5px;
+    vertical-align: 3px;
+}
+.container{
+    height: 100%;
+    .hide-btn{
+        position: absolute;
+        right: -22px;
+        top: 50%;
+        width: 25px;
+        height: 120px;
+        background: url(/assets/image/hide-arrow.png) no-repeat center center;
+        -webkit-transform: translateY(-50%);
+        transform: translateY(-50%);
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .menu-box{
+        height: 100%;
+        overflow-x: hidden;
+    }
+}

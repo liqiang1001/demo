@@ -1,0 +1,27 @@
+<div class="container">
+  <div (click)="toggleCollapsed()" class="hide-btn">
+    <i nz-icon [type]="isCollapsed?'menu-unfold':'menu-fold'"></i>
+  </div>
+  <div class="menu-box">
+    <ul nz-menu [nzMode]="'inline'" style="width: 260px;">
+      <ng-container *ngFor="let item of menu">
+        <li *ngIf="item.name==='首页'" nz-menu-item [routerLink]='item.url' routerLinkActive="ant-menu-item-selected"
+          (click)="openHandler(item.name)">
+          <span title> <i class="anticon anticon-home"></i> {{item.name}}</span>
+        </li>
+        <li *ngIf="item.name!=='首页'" nz-submenu [(nzOpen)]="item.checked" (nzOpenChange)="openHandler(item.name)">
+          <span title> {{item.name}}</span>
+          <ul *ngIf="item.childMenus">
+            <li *ngFor="let child of item.childMenus" nz-menu-group>
+              <span title>{{child.name}}</span>
+              <ul *ngIf="child.childMenus">
+                <li *ngFor="let little of child.childMenus" (click)="selectMenu(little)" [queryParams]="{ littleId : little.id}"
+                  [routerLink]='"."+little.url' routerLinkActive="ant-menu-item-selected" nz-menu-item><span class="point"></span>{{little.name}}</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ng-container>
+    </ul>
+  </div>
+</div>

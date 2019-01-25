@@ -1,0 +1,168 @@
+@import "../../../../../styles.less";
+@import "../../dashboard/dashboard.component.less";
+
+
+select {
+    width: 90px;
+  }
+  
+  label:nth-child(4) {
+    margin-left: 20px;
+  }
+  .query-label{
+      text-align: right;
+  }
+  
+  table .enterpriseName {
+    cursor: pointer;
+    color: #3ac3ec;
+    &:hover {
+      text-decoration-line: underline;
+    }
+  }
+  .shit{
+    display: inline-block;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+    max-width: 300px;
+  }
+  table tr td:nth-child(1) *{
+    max-width: 200px;
+  }
+  .selectScroll {
+    max-height: 63px;
+    overflow-y: scroll;
+  }
+  
+  .buttons {
+    display: inline-block;
+    padding: 2px 5px 2px 0;
+    margin-right: 4px;
+    margin-bottom: 6px;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, .5);
+    position: relative;
+    text-indent: 1em;
+  }
+  
+  .buttons::before {
+    content: '×';
+    color: rgba(0, 0, 0, .8);
+    cursor: pointer;
+    position: absolute;
+    left: -11px;
+  }
+  
+  .buttons:hover::before {
+    color: red;
+    font-weight: bold;
+    font-size: 18px;
+    left: -13px;
+    top: -2px;
+  }
+  
+  .buttonS {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .buttonS>div:nth-child(1) {
+    background: #002255;
+    color: white;
+    padding: 3px;
+    margin: 0 10px;
+    cursor: pointer;
+  }
+  
+  .buttonS>div:nth-child(2) {
+    background: #002255;
+    color: white;
+    padding: 3px;
+    margin: 0 10px;
+    cursor: pointer;
+  }
+  
+  .buttonS>div:nth-child(3) {
+    background: #002255;
+    color: white;
+    padding: 3px;
+    margin: 0 10px;
+    cursor: pointer;
+  }
+  
+  .makeSelfSet {
+    display: inline-flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom:17px;
+    cursor: pointer;
+    color:@font-color-theme;
+    &>.makeSelfSetDiv {
+      width:40px;
+      height:40px;
+      background:rgba(255,255,255,1);
+      border-radius:5px;
+      font-size:26px;
+      text-align: center;
+      box-shadow:0px 1px 16px 0px rgba(153,153,153,0.13);
+    }
+  }
+  .checkBoxList {
+    height:92px;
+    background:rgba(255,255,255,1);
+    border-radius:8px;
+    padding:10px;
+    box-shadow:0px 1px 16px 0px rgba(153,153,153,0.13);
+  }
+  .checkBoxList  label{
+    display: inline-flex;
+    align-items: center;
+  }
+  input{
+    padding-right: unset;
+    padding-left: unset;
+    margin-right:3px;
+  }
+
+  input[type="checkbox"]{ 
+       -webkit-appearance: none;   
+        vertical-align:middle;    
+        margin-top:0;    
+        background:#fff;    
+        border:#a8a8a8 solid 1px;   
+        border-radius: 3px;   
+        min-height: 16px;   
+        min-width: 16px;
+}
+input[type="checkbox"]:checked {   
+   border-color:@font-color-theme2; 
+  //  background:@font-color-theme2; 
+   position: relative;
+  }
+input[type="checkbox"]:checked::after{  
+    content: '';
+    display: block;    
+    top: 3px;    
+    left: 3px;   
+    position: absolute;   
+    background: transparent;    
+    border:  @font-color-theme2 solid 2px;   
+    border-top: none;   
+    border-right: none;    
+    height: 6px;    
+    width: 10px;   
+    -moz-transform: rotate(-45deg);   
+    -ms-transform: rotate(-45deg);    
+    -webkit-transform: rotate(-45deg);    
+    transform: rotate(-45deg);
+}
+  .drop-btn{
+    width:100%;
+  }
+  .rowSelectionTable td,.rowSelectionTable th{
+    padding: 16px 8px !important;
+    text-align: center;
+  }
+
+  

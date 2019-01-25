@@ -1,0 +1,17 @@
+<div class="msg-box"> 
+  <p class="msg-count"><i nz-icon type="exclamation-circle" theme="outline"></i>您共有 <span>0</span> 条未处理待办信息</p>
+  <div class="msg-item" (mouseenter)="toggle()" (mouseleave)="toggle()">
+    <div>
+      <span class="circle-icon">
+        
+      </span>
+      <span class="flash-icon"><img src="assets/image/alarm.png" alt=""></span>
+      <span>#系统#</span>
+      <span>欢迎登录金管通系统！</span>
+    </div>
+    <div class="msg-time">
+      <p>系统</p>
+      <span>{{dd}}</span>
+    </div>
+  </div>
+</div>

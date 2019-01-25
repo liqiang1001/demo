@@ -1,0 +1,226 @@
+<div>
+  <form class="SearchForm" nz-form [formGroup]="searchForm">
+    <nz-row>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9">任务名称</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-col>
+              <input nz-input formControlName="name">
+            </nz-col>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9">任务开始区间</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-row>
+              <nz-col nzSpan="12" style="padding-right:10px;">
+                <nz-date-picker [nzPlaceHolder]="'开始日期'" formControlName="minDate" [nzFormat]="'yyyy-MM-dd'"></nz-date-picker>
+              </nz-col>
+              <nz-col nzSpan="12" style="padding-left:10px;">
+                <nz-date-picker [nzPlaceHolder]="'结束日期'" formControlName="maxDate" [nzFormat]="'yyyy-MM-dd'"></nz-date-picker>
+              </nz-col>
+            </nz-row>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9">任务状态</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-select style="width: 100%" formControlName="status" [nzPlaceHolder]="'请选择'" nzAllowClear>
+              <nz-option *ngFor="let item of statusList" [nzLabel]="item.name" [nzValue]="item.val">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9">任务频次</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-select style="width: 100%" formControlName="reportType" [nzPlaceHolder]="'请选择'" nzAllowClear>
+              <nz-option *ngFor="let item of reportTypeList" [nzLabel]="item.name" [nzValue]="item.id">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <!-- <nz-col nzLg="8" nzXl="6" *ngIf="searchForm.value.reportType==='1008'">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9">自定义频次选择</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-select style="width: 100%" formControlName="reportNumber" [nzPlaceHolder]="'请选择'" nzAllowClear>
+              <nz-option *ngFor="let item of sourceNames" [nzLabel]="item.name" [nzValue]="item.id">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col> -->
+    </nz-row>
+    <nz-row class="but-group" nzFlex [nzJustify]="'space-between'" style="margin-top:15px;">
+      <nz-col nzSpan="12" style="text-align: left;" *ngIf="menuList[0].show">
+        <button nz-button [nzType]="'primary'" (click)="showModalForComponent(1)" type="button">
+          <i class="anticon anticon-plus"></i>
+          <span>创建填报任务</span>
+        </button>
+      </nz-col>
+      <nz-col nzSpan="12">
+        <button nz-button [nzType]="'primary'" (click)="getDataList(searchForm.value)" (keyup.enter)="getDataList(searchForm.value)">
+          <i class="anticon anticon-search"></i>
+          <span>查询</span>
+        </button>
+        <button nz-button [nzType]="'primary'" (click)="resetForm()">
+          <i class="anticon anticon-reload"></i>
+          <span>重置</span>
+        </button>
+      </nz-col>
+    </nz-row>
+  </form>
+
+  <nz-table #nzTable [nzData]="tableList" (nzCurrentPageDataChange)="currentPageDataChange($event)" [nzTotal]="total"
+    (nzPageIndexChange)="refreshStatus($event)" [nzFrontPagination]="false" [(nzPageIndex)]="pageIndex" [(nzPageSize)]="pageSize"
+    >
+    <thead>
+      <tr>
+        <th *ngFor="let item of tabList">{{item}}</th>
+        <th nz-th *ngIf="isOnlyRead=='1'">操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr nz-tbody-tr *ngFor="let item of nzTable.data; let i=index">
+        <td nz-td>{{i+1}}</td>
+        <td nz-td *ngIf="isOnlyRead=='1'">
+          <a href="javascript:void(0)" (click)="toTaskName(item)">{{item.name}}</a>
+        </td>
+        <td nz-td *ngIf="isOnlyRead=='0'">{{item.name}}</td>
+        <!-- <td nz-td>{{changeDate(item.beginDate)}}</td> -->
+        <td nz-td>{{changeTime(item.beginDate)}}</td>
+
+        <td nz-td>{{item.createByName }}</td>
+        <td nz-td>{{item.reportTypeName }}</td>
+
+        <td nz-td *ngIf="item.status==0">未发布</td>
+        <td nz-td *ngIf="item.status==1">未开始</td>
+        <td nz-td *ngIf="item.status==2">进行中</td>
+        <td nz-td *ngIf="item.status==3">已关闭</td>
+        <td nz-td *ngIf="item.status==4">已删除</td>
+
+        <td nz-td *ngIf="isOnlyRead=='1'">
+          <nz-dropdown>
+            <button nz-button nzType="primary" nz-dropdown><span>操作</span><i class="anticon anticon-down"></i></button>
+            <ul nz-menu class="btn-box">
+              <li nz-menu-item style="text-align: center;" (click)="getdetail(item.id)" *ngIf="menuList[1].show">详情</li>
+              <li nz-menu-item style="text-align: center;" *ngIf="menuList[2].show&&item.status==2">
+                <button nz-button [nzType]="'default'" *ngIf="item.isModify=='true'" (click)="close(item)">关闭</button>
+                <button nz-button disabled [nzType]="'default'" *ngIf="item.isModify=='false'">关闭</button></li>
+              <li nz-menu-item style="text-align: center;" *ngIf="menuList[6].show&&item.status==0">
+                <button nz-button [nzType]="'default'" *ngIf="item.isModify=='true'" class="dealButton" (click)="fabu(item.id)">发布</button>
+                <button nz-button disabled [nzType]="'default'" *ngIf="item.isModify=='false'" class="dealButton">发布</button>
+              </li>
+              <li nz-menu-item style="text-align: center;" *ngIf="menuList[3].show&&item.status==0">
+                <button nz-button [nzType]="'default'" *ngIf="item.isModify=='true'" class="dealButton" (click)="showModalForComponent(item)">修改</button>
+                <button nz-button disabled [nzType]="'default'" *ngIf="item.isModify=='false'" class="dealButton">修改</button>
+              </li>
+              <li nz-menu-item style="text-align: center;" *ngIf="menuList[5].show&&item.status!=4" (click)="taskProgress(item)">
+                进度详情</li>
+              <li nz-menu-item style="text-align: center;" *ngIf="menuList[4].show&&item.status==1||item.status==0">
+                <button nz-button [nzType]="'default'" *ngIf="item.isModify=='true'" (click)="removeTask(item)">删除</button>
+                <button nz-button disabled [nzType]="'default'" *ngIf="item.isModify=='false'">删除</button>
+              </li>
+            </ul>
+          </nz-dropdown>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>
+
+<!-- 详情弹框 -->
+<nz-modal nzWidth="700" [(nzVisible)]="isDetail" nzTitle="任务详情" (nzOnCancel)="handleCancel2()" (nzOnOk)="handleOk2()">
+  <nz-row>
+    <nz-col nzSpan="12" style="text-align: right">
+      <span style="color:red;margin-right:2px;">*</span>
+      任务名称:
+    </nz-col>
+    <nz-col nzSpan="12" style="text-align: left;padding-left:10px;">
+      {{previewData.taskName}}
+    </nz-col>
+  </nz-row>
+  <nz-row>
+    <nz-col nzSpan="12" style="text-align: right">
+      <span style="color:red;margin-right:2px;">*</span>
+      选择子表单:
+    </nz-col>
+    <nz-col nzSpan="12" style="text-align: left;padding-left:10px;">
+      {{previewData.selectList}}
+    </nz-col>
+  </nz-row>
+  <nz-row>
+    <nz-col nzSpan="12" style="text-align: right">
+      <span style="color:red;margin-right:2px;">*</span>
+      关联区域:
+    </nz-col>
+    <nz-col nzSpan="12" style="text-align: left;padding-left:10px;">
+      {{previewData.areas.join('，')}}
+    </nz-col>
+  </nz-row>
+  <nz-row>
+    <nz-col nzSpan="12" style="text-align: right">
+      <span style="color:red;margin-right:2px;">*</span>
+      任务开始时间：
+    </nz-col>
+    <nz-col nzSpan="12" style="text-align: left;padding-left:10px;">
+      {{previewData.taskTime}}
+    </nz-col>
+  </nz-row>
+  <nz-row>
+    <nz-col nzSpan="12" style="text-align: right">
+      <span style="color:red;margin-right:2px;">*</span>
+      是否是紧急任务：
+    </nz-col>
+    <nz-col nzSpan="12" style="text-align: left;padding-left:10px;">
+      {{previewData.isEmergency}}
+    </nz-col>
+  </nz-row>
+  <nz-row>
+    <nz-col nzSpan="12" style="text-align: right">
+      <span style="color:red;margin-right:2px;">*</span>
+      是否需要审批：
+    </nz-col>
+    <nz-col nzSpan="12" style="text-align: left;padding-left:10px;">
+      {{previewData.isApproval}}
+    </nz-col>
+  </nz-row>
+
+  <nz-row>
+    <nz-col nzSpan="12" style="text-align: right">
+      <span style="color:red;margin-right:2px;">*</span>
+      填报频次：
+    </nz-col>
+    <nz-col nzSpan="12" style="text-align: left;padding-left:10px;">
+      间隔 {{previewData.status}} 天
+    </nz-col>
+  </nz-row>
+  <nz-row>
+    <nz-col nzSpan="12" style="text-align: right">
+      填报提交时间说明：
+    </nz-col>
+    <nz-col nzSpan="12" style="text-align: left;padding-left:10px;">
+      {{previewData.fillData}}
+    </nz-col>
+  </nz-row>
+  <nz-row>
+    <nz-col nzSpan="12" style="text-align: right">
+      附件：
+    </nz-col>
+    <nz-col nzSpan="12" style="text-align: left;padding-left:10px;">
+
+      <p *ngFor="let item of previewData.accessory" (click)="download(item)" style="cursor:pointer;" title="点击可下载文件">
+        {{item.fileName}}
+      </p>
+    </nz-col>
+  </nz-row>
+</nz-modal>

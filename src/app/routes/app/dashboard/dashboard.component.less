@@ -1,0 +1,46 @@
+.container{
+    height: calc(100vh - 95px);
+    h3{
+        font-size: 20px;
+        color: #27a6ff;
+    }
+    .ent-info{
+        height: 40%;
+        nz-col{
+           height: 100%;
+           position: relative;
+        }
+        padding-top: 10px;
+    }
+    .task-box{
+        height: 55%;
+        padding-top: 10px;
+        display: flex;
+        .task-enter{
+            width: 430px;
+            min-width: 430px;
+            flex-grow: 0;
+            position: relative;
+        }
+        .task-list{
+            flex-grow: 0;
+            position: relative;
+            .boder-box{
+                overflow-x: scroll;
+                width: calc(100vw - 465px);
+                display: flex;
+                align-items: center;
+            }
+        }
+    }
+    .boder-box{
+        box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.6);
+        border-radius: 1px;
+        border: 1px solid #ccc;
+        display: block;
+        height: calc(100% - 50px);
+        margin: 0px auto 0;
+        width: 100%;
+        background-color: #fff;
+    }
+}

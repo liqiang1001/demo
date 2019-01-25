@@ -1,0 +1,82 @@
+/* You can add global styles to this file, and also import other style files */
+
+.box-s{
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+// 字体大小
+@font-size-10:10px;
+@font-size-12:12px;
+@font-size-14:14px;
+@font-size-16:16px;
+@font-size-18:18px;
+@font-size-20:20px;
+@font-size-22:22px;
+@font-size-24:24px;
+//字体颜色
+
+@font-color-theme:rgba(153,153,153,1);
+@font-color-theme2:rgba(3,133,255,1);
+@font-color-theme3:rgba(255,255,255,1);
+
+//边框颜色
+@boder-color-theme:rgba(216,216,216,1);
+
+//背景颜色
+@background-color-theme:rgba(255,255,255,1);
+
+.SearchForm{
+    .ant-form-item{
+        margin-bottom: 0;
+    }
+    .but-group{
+        text-align: right;
+        [nz-button] {
+            margin-right: 8px;
+            margin-bottom: 12px;
+        }
+    }
+}
+.ant-btn+.ant-btn {
+    margin-left: 10px;
+}
+.margin-top15{
+    margin-top: 15px;
+}
+.red{
+    color: red;
+    font-weight: bold;
+}
+
+/* 设置滚动条的样式 */
+::-webkit-scrollbar {
+    width:2px;
+    }
+    // ::-webkit-scrollbar:vertical{
+    //     width:2px;
+    // }
+    
+    /* 滚动槽 */
+    ::-webkit-scrollbar-track {
+    -webkit-box-shadow:inset006pxrgba(0,0,0,0.3);
+    border-radius:10px;
+    }
+    /* 滚动条滑块 */
+    ::-webkit-scrollbar-thumb {
+    border-radius:10px;
+    background:rgba(0,0,0,0.1);
+    -webkit-box-shadow:inset006pxrgba(0,0,0,0.5);
+    }
+    ::-webkit-scrollbar-thumb:window-inactive {
+    background:rgba(255,0,0,0.4);
+    }
+    .ant-table-fixed-header .ant-table-scroll .ant-table-header{
+        overflow: hidden;
+    }
+    .fixed-table{
+        cursor: pointer;
+        i{
+          color: rgba(3,133,255,1);
+        }
+      }

@@ -1,0 +1,105 @@
+<div>
+  <form class="SearchForm" nz-form [formGroup]="searchForm">
+    <nz-row>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9" [nzFor]="'checkItemGroupName'">核查项组名</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <input nz-input placeholder="请输入核查项组名" formControlName="checkItemGroupName" [attr.id]="'checkItemGroupName'">
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9" [nzFor]="'res0'">核查项</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <input nz-input placeholder="请输入核查项" formControlName="res0" [attr.id]="'res0'">
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+    </nz-row>
+    <nz-row class="but-group" nzFlex [nzJustify]="'space-between'" style="margin-top:15px;">
+      <nz-col nzSpan="12" style="text-align: left;" *ngIf="menuList[0].show">
+        <button nz-button [nzType]="'primary'" (click)="showModal()">
+          <i class="anticon anticon-plus-circle-o"></i>
+          <span>创建核查项</span>
+        </button>
+      </nz-col>
+      <nz-col nzSpan="12">
+        <button nz-button [nzType]="'primary'" (click)="getList(searchForm.value)" (keyup.enter)="getList(searchForm.value)">
+          <i class="anticon anticon-search"></i>
+          <span>查询</span>
+        </button>
+        <button nz-button [nzType]="'primary'" (click)="resetForm()">
+          <i class="anticon anticon-reload"></i>
+          <span>重置</span>
+        </button>
+      </nz-col>
+    </nz-row>
+  </form>
+  <nz-table #rowSelectionTable [nzFrontPagination]="false" [nzData]="data" (nzCurrentPageDataChange)="currentPageDataChange($event)"
+    (nzPageIndexChange)="refreshStatus($event)" [nzTotal]="total" [nzPageIndex]="pageIndex" [(nzPageSize)]="pageSize"
+    [nzFrontPagination]="false" >
+    <thead>
+      <tr>
+        <th>序号</th>
+        <th>核查项组名称</th>
+        <th>核查项</th>
+        <th>核查项数量</th>
+        <th>创建人</th>
+        <th>创建时间</th>
+        <th *ngIf="menuList[1].show">操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of rowSelectionTable.data;let i = index;">
+        <td>{{i+1}}</td>
+        <td>{{data.checkItemGroupName}}</td>
+        <td>{{data.res0}}</td>
+        <td>{{data.res1}}</td>
+        <td>{{data.createUser}}</td>
+        <td>{{data.createTime | date:"MM/dd/yy"}}</td>
+        <td *ngIf="menuList[1].show"><button nz-button nzType="danger" nz-popconfirm nzTitle="确定执行该操作?" (nzOnConfirm)="confirm(data.id)"
+            (nzOnCancel)="cancel()">删除</button></td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <nz-modal [(nzVisible)]="isVisible" nzWidth="700" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter"
+    (nzOnCancel)="handleCancel()">
+    <ng-template #modalTitle>
+      核查项创建
+    </ng-template>
+
+    <ng-template #modalContent>
+      <form class="SearchForm" nz-form [formGroup]="createForm">
+        <nz-row>
+          <nz-form-item nzFlex>
+            <nz-form-label nzSpan="6" [nzFor]="checkItemGroupName">核查项组名</nz-form-label>
+            <nz-form-control nzSpan="6">
+              <input nz-input placeholder="请输入核查项组名" formControlName="checkItemGroupName" [attr.id]="checkItemGroupName">
+            </nz-form-control>
+          </nz-form-item>
+
+        </nz-row>
+        <nz-row>
+          <nz-form-item nzFlex>
+            <nz-form-label nzSpan="6" [nzFor]="'res0'">核查项</nz-form-label>
+            <nz-form-control nzSpan="18">
+              <nz-checkbox-wrapper style="width: 100%;margin-top: 10px;" (nzOnChange)="selectCheckOpiton($event)">
+                <div nz-row>
+                  <div nz-col nzSpan="8" *ngFor="let item of CheckOptions"><label formControlName="option" nz-checkbox
+                      [nzValue]="item.id" [attr.id]="'res0'">{{item.name}}</label></div>
+                </div>
+              </nz-checkbox-wrapper>
+            </nz-form-control>
+          </nz-form-item>
+        </nz-row>
+      </form>
+    </ng-template>
+
+    <ng-template #modalFooter>
+      <button nz-button nzType="primary" (click)="handleOk(createForm.value)" [nzLoading]="isConfirmLoading">创建</button>
+      <button nz-button nzType="default" (click)="handleCancel()">返回</button>
+    </ng-template>
+  </nz-modal>
+</div>

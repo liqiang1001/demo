@@ -1,0 +1,72 @@
+@import "../../../../styles.less";
+
+.login-body{
+    width:100%;
+    height:100%;
+    padding: 30px ;
+}
+.c-login-header h3{
+    height:23px;
+    font-size:@font-size-24;
+    font-family:MicrosoftYaHei-Bold;
+    font-weight:bold;
+    color:@font-color-theme2;
+    text-align: center;
+ }
+
+
+ .form-body{
+    padding-top:10px;
+    width:100%;
+    .form-list{
+        width:100%;
+        height:48px;
+        background:rgba(255,255,255,1);
+        border:1px solid rgba(216,216,216,1);
+        margin-top:20px;
+        position: relative;
+        padding-left:15px;
+
+        img{
+            position: absolute;
+            left:22px;
+        }
+        input{
+            border:none;
+            height:100%;
+            font-size:@font-size-14;
+            font-weight:300;
+            color:@font-color-theme;
+            width:100%;
+            outline:none
+        }
+     }
+     .code-img{
+        width:114px;
+        height:48px;
+        background:@background-color-theme;
+        border:1px solid @boder-color-theme;
+        position: absolute;
+        right:0;
+        top:0;
+    }
+    .code-img img{
+        width:100%;
+        height:100%;
+    }
+    .btn-box{
+        width:100%;
+        margin-top:20px;
+        button{
+            width:140px;
+            height:48px;
+        }
+        .next-btn{
+            float:right;
+        }
+        &:hover{
+            color:#23527c;
+        }
+
+    }
+}

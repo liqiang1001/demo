@@ -1,0 +1,190 @@
+<div>
+    <form class="SearchForm" nz-form [formGroup]="searchForm">
+      <nz-row>
+          <nz-col nzMd="6" nzLg="8" nzXl="6">
+              <nz-form-item nzFlex>
+                <nz-form-label nzSpan="12" >公司名称</nz-form-label>
+                <nz-form-control nzSpan="12">
+                  <input nz-input placeholder="请输入公司名称" formControlName="entName" >
+                </nz-form-control>
+              </nz-form-item>
+          </nz-col>
+          <nz-col nzMd="6" nzLg="8" nzXl="6">
+              <nz-form-item nzFlex>
+                <nz-form-label nzSpan="12">时间</nz-form-label>
+                <nz-form-control nzSpan="12" >
+                  <nz-select style="width: 100%;" [nzMode]="'multiple'"  
+                    [nzPlaceHolder]="'请选择'" nzAllowClear formControlName="batchDateList">
+                    <nz-option *ngFor="let item of multipleList" [nzLabel]="item.label" [nzValue]="item.val">
+                    </nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+            </nz-col>
+          <nz-col nzMd="6" nzLg="8" nzXl="6">
+              <nz-form-item nzFlex>
+                  <nz-form-label nzSpan="12">由低到高排序</nz-form-label>
+                  <nz-form-control nzSpan="12">
+                    <nz-select style="width: 100%" formControlName="sortType" [attr.id]="'entName'" [nzPlaceHolder]="'请选择'"
+                      nzAllowClear>
+                      <nz-option *ngFor="let item of sortTypeList" [nzLabel]="item.name" [nzValue]="item.val">
+                      </nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+          </nz-col>
+          <nz-col nzMd="6" nzLg="8" nzXl="6">
+              <nz-form-item nzFlex>
+                <nz-form-label nzSpan="12" >平均借款期限（天）</nz-form-label>
+                <nz-form-control class="double-input" nzSpan="12"> 
+                    <nz-input-number  [nzMin]="1"  [nzStep]="1" formControlName="minAverageBorrowDeadline"></nz-input-number>~
+                    <nz-input-number  [nzMin]="1"  [nzStep]="1" formControlName="minAverageBorrowDeadline"></nz-input-number>
+                  </nz-form-control>
+              </nz-form-item>
+          </nz-col>
+
+          <nz-col nzMd="6" nzLg="8" nzXl="6">
+              <nz-form-item nzFlex>
+                <nz-form-label nzSpan="12" >平均投资额度（万元）</nz-form-label>
+                <nz-form-control class="double-input" nzSpan="12"> 
+                    <nz-input-number  [nzMin]="1"  [nzStep]="1" formControlName="minAverageInvestLimit"></nz-input-number>~
+                    <nz-input-number  [nzMin]="1"  [nzStep]="1" formControlName="maxAverageInvestLimit"></nz-input-number>
+                  </nz-form-control>
+              </nz-form-item>
+          </nz-col>
+          <nz-col nzMd="6" nzLg="8" nzXl="6">
+              <nz-form-item nzFlex>
+                <nz-form-label nzSpan="12" >借贷余额（万元）</nz-form-label>
+                <nz-form-control class="double-input" nzSpan="12"> 
+                    <nz-input-number  [nzMin]="1"  [nzStep]="1" formControlName="minBorrowBalance"></nz-input-number>~
+                    <nz-input-number  [nzMin]="1"  [nzStep]="1" formControlName="maxBorrowBalance"></nz-input-number>
+                  </nz-form-control>
+              </nz-form-item>
+          </nz-col>
+          <nz-col nzMd="6" nzLg="8" nzXl="6">
+              <nz-form-item nzFlex>
+                <nz-form-label nzSpan="12" >累计交易总额（万元）</nz-form-label>
+                <nz-form-control class="double-input" nzSpan="12"> 
+                    <nz-input-number  [nzMin]="1"  [nzStep]="1" formControlName="minExchangeCount"></nz-input-number>~
+                    <nz-input-number  [nzMin]="1"  [nzStep]="1" formControlName="maxExchangeCount"></nz-input-number>
+                  </nz-form-control>
+              </nz-form-item>
+          </nz-col>
+          <nz-col nzMd="6" nzLg="8" nzXl="6">
+              <nz-form-item nzFlex>
+                <nz-form-label nzSpan="12" >平均投资回报（万元）</nz-form-label>
+                <nz-form-control class="double-input" nzSpan="12"> 
+                    <nz-input-number  [nzMin]="1"  [nzStep]="1" formControlName="minAverageInvestReturn" ></nz-input-number>~
+                    <nz-input-number  [nzMin]="1"  [nzStep]="1" formControlName="maxAverageInvestReturn"></nz-input-number>
+                  </nz-form-control>
+              </nz-form-item>
+          </nz-col>
+          <nz-col nzMd="6" nzLg="8" nzXl="6">
+              <nz-form-item nzFlex>
+                <nz-form-label nzSpan="12" >存管余额（万元）</nz-form-label>
+                <nz-form-control class="double-input" nzSpan="12"> 
+                    <nz-input-number  [nzMin]="1"  [nzStep]="1" formControlName="mindepositBalance"></nz-input-number>~
+                    <nz-input-number  [nzMin]="1"  [nzStep]="1" formControlName="maxdepositBalance"></nz-input-number>
+                  </nz-form-control>
+              </nz-form-item>
+          </nz-col>
+          <nz-col nzMd="6" nzLg="8" nzXl="6">
+              <nz-form-item nzFlex>
+                <nz-form-label nzSpan="12" >线下交易总额（万元）</nz-form-label>
+                <nz-form-control class="double-input" nzSpan="12"> 
+                    <nz-input-number  [nzMin]="1"  [nzStep]="1" formControlName="minOfflineExchangeCount"></nz-input-number>~
+                    <nz-input-number  [nzMin]="1"  [nzStep]="1" formControlName="maxOfflineExchangeCount"></nz-input-number>
+                  </nz-form-control>
+              </nz-form-item>
+          </nz-col>
+          <nz-col nzMd="6" nzLg="8" nzXl="6">
+              <nz-form-item nzFlex>
+                <nz-form-label nzSpan="12" >平均借款成本（万元）</nz-form-label>
+                <nz-form-control class="double-input" nzSpan="12"> 
+                    <nz-input-number  [nzMin]="1"  [nzStep]="1" formControlName="minAverageBorrowCost"></nz-input-number>~
+                    <nz-input-number  [nzMin]="1"  [nzStep]="1" formControlName="maxAverageBorrowCost"></nz-input-number>
+                  </nz-form-control>
+              </nz-form-item>
+          </nz-col>
+          <nz-col nzMd="6" nzLg="8" nzXl="6">
+              <nz-form-item nzFlex>
+                <nz-form-label nzSpan="12" >平均借款额度（万元）</nz-form-label>
+                <nz-form-control class="double-input" nzSpan="12"> 
+                    <nz-input-number  [nzMin]="1"  [nzStep]="1" formControlName="minAverageBorrowCount"></nz-input-number>~
+                    <nz-input-number  [nzMin]="1"  [nzStep]="1" formControlName="maxAverageBorrowCount"></nz-input-number>
+                  </nz-form-control>
+              </nz-form-item>
+          </nz-col>
+          <nz-col nzMd="6" nzLg="8" nzXl="6">
+              <nz-form-item nzFlex>
+                <nz-form-label nzSpan="12" >关联关系借款余额（万元）</nz-form-label>
+                <nz-form-control class="double-input" nzSpan="12"> 
+                    <nz-input-number  [nzMin]="1"  [nzStep]="1" formControlName="minRelationBorrowBalance"></nz-input-number>~
+                    <nz-input-number  [nzMin]="1"  [nzStep]="1" formControlName="maxRelationBorrowBalance"></nz-input-number>
+                  </nz-form-control>
+              </nz-form-item>
+          </nz-col>
+          <nz-col nzMd="6" nzLg="8" nzXl="6">
+            <nz-form-item nzFlex>
+              <nz-form-label nzSpan="12">平台名称</nz-form-label>
+              <nz-form-control nzSpan="12">
+                <nz-col>
+                  <input nz-input formControlName="platform">
+                </nz-col>
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+      </nz-row>
+      <nz-row class="but-group">
+          <button nz-button [nzType]="'primary'" [nzLoading]="getDataList.isLoading" (click)="getDataList(searchForm.value)" (keyup.enter)="getDataList(searchForm.value)">
+            <i class="anticon anticon-search"></i>
+            <span>查询</span>
+          </button>
+          <button nz-button [nzType]="'primary'" (click)="resetForm()">
+            <i class="anticon anticon-reload"></i>
+            <span>重置条件</span>
+          </button>
+          <button nz-button [nzType]="'primary'" *ngIf="menuList[0].show" [nzLoading]="outFile.isLoading" (click)="outFile(searchForm.value)" (keyup.enter)="outFile(searchForm.value)">
+            <i class="anticon anticon-download"></i>
+            <span>导出</span>
+          </button>
+        </nz-row>
+    </form>
+    <nz-table #nzTable [nzData]="tableList" (nzCurrentPageDataChange)="currentPageDataChange($event)" [nzTotal]="total"
+    (nzPageIndexChange)="refreshStatus($event)" [nzFrontPagination]="false" [(nzPageIndex)]="pageIndex"
+    [(nzPageSize)]="pageSize"  [nzScroll]="{ x: '3400px'}">
+    <thead>
+      <tr >
+        <th *ngFor="let item of tabList" style="padding:16px 8px !important;">{{item}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of nzTable.data;let i = index;">
+          <td nz-td>{{i+1}}</td>
+          <td nz-td>{{item.sysEnterprise.name}}</td>
+          <td nz-td>{{item.batchDate|date:'yyyy-MM-dd'}}</td>
+          <td nz-td>{{item.sysEnterprise.platform}}</td>
+          <td nz-td>{{changeData(item.operatingInformation.opt_info_00,2)}}</td>
+          <td nz-td>{{changeData(item.operatingInformation.opt_info_01,0)}}</td>
+          <td nz-td>{{changeData(item.operatingInformation.opt_info_07,0)}}</td>
+          <td nz-td>{{changeData(item.operatingInformation.opt_info_08,0)}}</td>
+          <td nz-td>{{changeData(item.operatingInformation.opt_info_28,2)}}</td>
+          <td nz-td>{{changeData(item.operatingInformation.opt_info_29,4)}}</td>
+          <td nz-td>{{changeData(item.operatingInformation.opt_info_30,2)}}</td>
+          <td nz-td>{{changeData(item.operatingInformation.opt_info_31,1)}}</td>
+          <td nz-td>{{changeData(item.operatingInformation.opt_info_02,2)}}</td>
+          <td nz-td>{{changeData(item.operatingInformation.opt_info_32,2)}}</td>
+          <td nz-td>{{changeData(item.operatingInformation.opt_info_33,0)}}</td>
+          <td nz-td>{{changeNum(item.batchDate,item.operatingInformation.opt_info_34,1)}}</td>
+          <td nz-td>{{changeData(item.operatingInformation.opt_info_11,2)}}</td>
+          <td nz-td>{{changeData(item.operatingInformation.opt_info_12,0)}}</td>
+          <td nz-td>{{changeData(item.operatingInformation.opt_info_13,2)}}</td>
+          <td nz-td></td>
+          <td nz-td></td>
+          <td nz-td></td>
+          <td nz-td></td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>
+

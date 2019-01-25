@@ -1,0 +1,47 @@
+<div class="container">
+  <div class="report-menu">
+    <h2>{{TaskInfo.name}}</h2>
+    <p *ngFor="let item of TaskMenu" (click)="getForm(item)" [ngClass]="{'active': item.taskSelected}">
+      <span class="text">{{item.formName}}</span>
+      <span><img *ngIf="item.reportStatus == 1" src="assets/image/u836.png" alt="">
+        <img *ngIf="item.reportStatus == 0" src="assets/image/u838.png" alt="">
+      </span>
+    </p>
+  </div>
+  <div class="report-info">
+    <div *ngIf="ItemForm">时间：{{ItemForm.beginDate | date: 'yyyy-MM-dd'}}</div>
+    <!-- 表单组件 -->
+    <app-form *ngIf="ItemForm" [Form]="Form" [FormId]="FormId" [FormType]="ItemForm.formType" [State]="FormStatu" (FormChange)="refreshState()"></app-form>
+    <div class="margin-top15" class="comment" *ngIf="Comment && Comment.length>0">
+      <p>填报说明：</p>
+      <ol>
+        <li *ngFor="let item of Comment;let i = index">{{item?.showName}}：{{item?.comment}}</li>
+      </ol>
+    </div>
+    <nz-table class="margin-top15" *ngIf="ItemForm && ItemForm.formType === '3'" #basicTable [nzData]="FormList" [nzScroll]="{ x:'300px'}" [nzShowPagination]="false">
+      <thead>
+        <tr>
+          <th *ngFor="let item of Form">{{item?.showName}}</th>
+          <th *ngIf="!FormStatu">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of basicTable.data;let i = index;">
+          <td *ngFor="let item of Form">
+            <span *ngIf="item && item.type == 5 || item.type == 7">{{data[item.fieldName] | objTransform:'name'}}</span>
+            <span *ngIf="item.type != 5 && item.type != 7">{{data[item.fieldName]}}</span>
+          </td>
+          <td *ngIf="!FormStatu">
+            <a (click)="polyFormToggle(data)">编辑</a>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a style="color:red;" (click)="delPolyForm(data,i)">删除</a>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+    <div nz-row class="margin-top15" nzType="flex" *ngIf="!FormStatu && ItemForm && ItemForm.formType == 3" nzJustify="center">
+      <button nzType="primary" (click)="polySubmit()" nz-button>提交</button>
+  
+    </div>
+  </div>
+</div>

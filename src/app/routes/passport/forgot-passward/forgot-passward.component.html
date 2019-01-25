@@ -1,0 +1,22 @@
+<div class="login-body box-s">
+  <div class="c-login-header">
+    <h3>密码找回</h3>
+  </div>
+  <div class="form-body">
+    <div class="form-list box-s">
+      <input type="text" placeholder="请输入用户名" [(ngModel)]="loginName">
+    </div>
+    <div class="form-list2" style="position: relative;width:300px;margin-top:20px;">
+      <div class="form-list box-s " style="width:176px;margin-top:0;">
+        <input type="text" placeholder="请输入验证码" [(ngModel)]="registerNum">
+      </div>
+      <div class="code-img">
+        <img src="{{captchaImg}}" alt="" (click)="_updateCapthaImg()">
+      </div>
+    </div>
+    <div class="btn-box">
+      <button nz-button nzType="primary" (click)="goBack()">返回</button>
+      <button nz-button nzType="primary" class="next-btn" (click)="authenTication()">下一步</button>
+    </div>
+  </div>
+</div>

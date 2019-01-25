@@ -1,0 +1,172 @@
+<div>
+  <form class="SearchForm" nz-form [formGroup]="searchForm">
+    <nz-row>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9">时间</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-select style="width: 100%;" [nzMode]="'multiple'" [nzPlaceHolder]="'请选择'" nzAllowClear formControlName="batchDateList">
+              <nz-option *ngFor="let item of multipleList" [nzLabel]="item.label" [nzValue]="item.val">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9">整改通知书批次</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-select style="width: 100%" formControlName="batch" [nzPlaceHolder]="'请选择'" nzAllowClear>
+              <nz-option *ngFor="let item of batchTypeList" [nzLabel]="item.name" [nzValue]="item.val">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9">平台名称</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-col>
+              <input nz-input formControlName="platform">
+            </nz-col>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+    </nz-row>
+    <nz-row>
+      <nz-col nzLg="12" nzXl="10">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="6">综合搜索</nz-form-label>
+          <nz-form-control nzSpan="18">
+            <nz-input-group nzSuffixIcon="anticon anticon-search">
+              <input type="text" nz-input placeholder="输入要搜索的企业名称/公司注册号/统一社会信用代码" formControlName="enterpriseName">
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+    </nz-row>
+    <nz-row class="but-group" style="margin-top:20px">
+      <button nz-button [nzType]="'primary'" (click)="getDataList(searchForm.value)" (keyup.enter)="getDataList(searchForm.value)">
+        <i class="anticon anticon-search"></i>
+        <span>查询</span>
+      </button>
+      <button nz-button [nzType]="'primary'" (click)="resetForm()">
+        <i class="anticon anticon-reload"></i>
+        <span>重置条件</span>
+      </button>
+      <button nz-button [nzType]="'primary'" *ngIf="menuList[0].show" (click)="outFile(searchForm.value)" (keyup.enter)="outFile(searchForm.value)">
+        <i class="anticon anticon-download"></i>
+        <span>导出</span>
+      </button>
+    </nz-row>
+  </form>
+  <nz-table #nzTable [nzData]="tableList" (nzCurrentPageDataChange)="currentPageDataChange($event)" [nzTotal]="total"
+    (nzPageIndexChange)="refreshStatus($event)" [nzFrontPagination]="false" [(nzPageIndex)]="pageIndex" [(nzPageSize)]="pageSize"
+     [nzScroll]="{ x: '3900px', y: '430px'}">
+    <thead class="scroll-head">
+      <tr>
+        <ng-container *ngFor="let item of tabList;let i = index;">
+          <th *ngIf="!item.isPos" [nzWidth]="item.width + 'em'" style="padding:16px 0px !important;">{{item.name}}<i
+              nz-icon type="pushpin" theme="outline" style="cursor: pointer;" (click)="posCol(tabList,i)"></i></th>
+          <th [ngClass]="{'fixed-table': item.isPos}" *ngIf="item.isPos" [nzWidth]="item.width + 'em'" [nzLeft]="item.left"
+            style="padding:16px 0px !important;">{{item.name}}<i nz-icon (click)="posCol(tabList,i)" type="pushpin"
+              theme="outline"></i></th>
+        </ng-container>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of nzTable.data;let i = index;" (click)="selectedTable(data)">
+
+        <ng-container *ngFor="let item of tabList">
+          <td nz-td *ngIf="!item.isPos && item.tabname === 'index'" style="padding:16px 0px !important;">{{ i+1 }}</td>
+          <td nz-td *ngIf="!item.isPos && item.tabname !== 'index'" style="padding:16px 0px !important;"><span *ngIf="item.tabname =='batchBeginDate'">{{
+              data[item.tabname] | date:"yyyy-MM-dd"}}</span><span *ngIf="item.tabname !='batchBeginDate'">{{
+              data[item.tabname] }}</span></td>
+          <td nz-td *ngIf="item.isPos && item.tabname === 'index'" style="padding:16px 0px !important;" [nzLeft]="item.left">{{
+            i+1 }}</td>
+          <td nz-td *ngIf="item.isPos && item.tabname !== 'index'" style="padding:16px 0px !important;" [nzLeft]="item.left"><span
+              *ngIf="item.tabname =='batchBeginDate'">{{ data[item.tabname] | date:"yyyy-MM-dd"}}</span><span *ngIf="item.tabname !='batchBeginDate'">{{
+              data[item.tabname] }}</span></td>
+        </ng-container>
+        <!-- <ng-container> -->
+        <!-- <td nz-td *ngIf="tabList[0].isPos" [nzLeft]="tabList[1].left">{{ data.entName }}</td> -->
+        <!-- <td nz-td *ngIf="!tabList[0].isPos">{{ data.entName }}</td> -->
+        <!-- </ng-container> -->
+        <!-- <ng-container></ng-container> -->
+        <!-- <td nz-td style="padding:16px 8px !important;">{{ data.batchBeginDate | date:'yyyy-MM-dd '}}</td>
+              <td nz-td>{{data.platform}}</td>
+              <td nz-td>{{data.batchName}}</td>
+              <td nz-td [innerHTML]="returnData(data.isShow,data.opt_info_02)"></td>
+              <td nz-td [innerHTML]="returnData(data.isShow,data.opt_info_03)"></td>
+              <td nz-td [innerHTML]="returnData(data.isShow,data.opt_info_05)"></td>
+              <td nz-td [innerHTML]="returnData(data.isShow,data.opt_info_06)"></td>
+              <td nz-td [innerHTML]="returnData(data.isShow, data.opt_info_09)"></td>
+              <td nz-td [innerHTML]="returnData(data.isShow, data.opt_info_10)"></td>
+              <td nz-td [innerHTML]="returnData(data.isShow,data.opt_info_29)"></td>
+              <td nz-td [innerHTML]="returnData(data.isShow,data.opt_info_35)"></td>
+              <td nz-td [innerHTML]="returnData(data.isShow,data.opt_info_36)"></td>
+              <td nz-td [innerHTML]="returnData(data.isShow,data.opt_info_37)"></td>
+              <td nz-td [innerHTML]="returnData(data.isShow,data.opt_info_15)"></td>
+              <td nz-td [innerHTML]="returnData(data.isShow,data.opt_info_17)"></td>
+              <td nz-td [innerHTML]="returnData(data.isShow,data.opt_info_20)"></td>
+              <td nz-td [innerHTML]="returnData(data.isShow,data.opt_info_45)"></td>
+              <td nz-td [innerHTML]="returnData(data.isShow,data.opt_info_38)"></td>
+              <td nz-td [innerHTML]="returnData(data.isShow,data.bank_01)"></td>
+              <td nz-td [innerHTML]="returnData(data.isShow,data.bank_02)"></td>
+              <td nz-td [innerHTML]="returnData(data.isShow,data.bank_03)"></td>
+              <td nz-td [innerHTML]="returnData(data.isShow,data.bank_04)"></td> -->
+      </tr>
+    </tbody>
+  </nz-table>
+</div>
+
+
+<!-- 单个企业信息 -->
+<nz-modal nzWidth="100%" [(nzVisible)]="isVisible" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <nz-row style="margin-bottom: 20px;">
+    <span class="modal-info">{{ entName }}</span>
+    <span class="modal-info" *ngIf="entType">类型：{{ entType }}</span>
+    <span class="modal-info" *ngIf="batchName">整改通知书批次：{{ batchName }}</span>
+    <button nz-button style="float: right;margin-right: 50px;" [nzType]="'primary'" (click)="export()">
+      <span>导出</span>
+    </button>
+  </nz-row>
+  <nz-table #nzTable2 [nzData]="tableList2" (nzCurrentPageDataChange)="currentPageDataChange2($event)" [nzTotal]="total2"
+    (nzPageIndexChange)="refreshStatus2($event)" [nzFrontPagination]="false" [(nzPageIndex)]="pageIndex2"
+    [(nzPageSize)]="pageSize" [nzScroll]="{ x: '3700px'}">
+    <thead>
+      <tr>
+        <th *ngFor="let item of tabList" style="padding:16px 8px !important;">{{item.name}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of nzTable2.data;let i = index;" (click)="selectedTable(data)">
+        <td nz-td>{{ i+1 }}</td>
+        <td nz-td>{{ data.entName }}</td>
+        <td nz-td style="padding:16px 8px !important;">{{ data.batchBeginDate | date:'yyyy-MM-dd '}}</td>
+        <td nz-td>{{data.platform}}</td>
+        <td nz-td>{{data.batchName}}</td>
+        <td nz-td [innerHTML]="returnData(data.isShow,data.opt_info_02)"></td>
+        <td nz-td [innerHTML]="returnData(data.isShow,data.opt_info_03)"></td>
+        <td nz-td [innerHTML]="returnData(data.isShow,data.opt_info_05)"></td>
+        <td nz-td [innerHTML]="returnData(data.isShow,data.opt_info_06)"></td>
+        <td nz-td [innerHTML]="returnData(data.isShow, data.opt_info_09)"></td>
+        <td nz-td [innerHTML]="returnData(data.isShow, data.opt_info_10)"></td>
+        <td nz-td [innerHTML]="returnData(data.isShow,data.opt_info_29)"></td>
+        <td nz-td [innerHTML]="returnData(data.isShow,data.opt_info_35)"></td>
+        <td nz-td [innerHTML]="returnData(data.isShow,data.opt_info_36)"></td>
+        <td nz-td [innerHTML]="returnData(data.isShow,data.opt_info_37)"></td>
+        <td nz-td [innerHTML]="returnData(data.isShow,data.opt_info_15)"></td>
+        <td nz-td [innerHTML]="returnData(data.isShow,data.opt_info_17)"></td>
+        <td nz-td [innerHTML]="returnData(data.isShow,data.opt_info_20)"></td>
+        <td nz-td [innerHTML]="returnData(data.isShow,data.opt_info_45)"></td>
+        <td nz-td [innerHTML]="returnData(data.isShow,data.opt_info_38)"></td>
+        <td nz-td [innerHTML]="returnData(data.isShow,data.bank_01)"></td>
+        <td nz-td [innerHTML]="returnData(data.isShow,data.bank_02)"></td>
+        <td nz-td [innerHTML]="returnData(data.isShow,data.bank_03)"></td>
+        <td nz-td [innerHTML]="returnData(data.isShow,data.bank_04)"></td>
+      </tr>
+    </tbody>
+  </nz-table>
+</nz-modal>

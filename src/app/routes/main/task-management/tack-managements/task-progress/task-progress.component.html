@@ -1,0 +1,152 @@
+<div>
+  <nz-row>
+    <nz-col nzSpan="24" style="text-align: left">
+      <button nz-button [nzType]="'primary'" (click)="goBack()">
+        <i class="anticon anticon-rollback"></i>
+        <span>返回</span>
+      </button>
+    </nz-col>
+  </nz-row>
+  <nz-row>
+    <nz-col nzSpan="3" style="position:relative;height:210px">
+      <div echarts [options]="chartOption" style='height:210px'></div>
+    </nz-col>
+    <nz-col nzSpan="18">
+      <form class="SearchForm" nz-form [formGroup]="searchForm">
+        <nz-row>
+          <nz-col nzLg="8" nzXl="8" style="margin-bottom:15px;">
+            <nz-form-item nzFlex>
+              <nz-form-label nzSpan="9">企业名称</nz-form-label>
+              <nz-form-control nzSpan="15">
+                <nz-col>
+                  <input nz-input formControlName="entName">
+                </nz-col>
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+          <nz-col nzLg="8" nzXl="8" style="margin-bottom:15px;">
+            <nz-form-item nzFlex>
+              <nz-form-label nzSpan="9">填报进度</nz-form-label>
+              <nz-form-control nzSpan="15">
+                <nz-select style="width: 100%;" formControlName="reportProgress" [attr.id]="'reportProgress'"
+                  [nzPlaceHolder]="'请选择'" nzAllowClear>
+                  <nz-option *ngFor="let item of reportProgressList" [nzLabel]="item.name" [nzValue]="item.id">
+                  </nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+          <nz-col nzLg="8" nzXl="8" style="margin-bottom:15px;">
+            <nz-form-item nzFlex>
+              <nz-form-label nzSpan="9">任务更新时间</nz-form-label>
+              <nz-form-control nzSpan="15">
+                <nz-select style="width: 100%;" formControlName="batchBeginDate" [attr.id]="'batchBeginDate'"
+                  [nzPlaceHolder]="'请选择'" nzAllowClear>
+                  <nz-option *ngFor="let item of conpanyNameData" [nzLabel]="item.name" [nzValue]="item.id">
+                  </nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+          <nz-col nzLg="8" nzXl="8" style="margin-bottom:15px;">
+            <nz-form-item nzFlex>
+              <nz-form-label nzSpan="9" [nzFor]="'provinceCode'">省</nz-form-label>
+              <nz-form-control nzSpan="15">
+                <nz-select style="width: 100%" formControlName="provinceCode" [attr.id]="'provinceCode'"
+                  [nzPlaceHolder]="'请选择'" nzAllowClear (ngModelChange)="getCitys($event)">
+                  <nz-option *ngFor="let item of provinces" [nzLabel]="item.name" [nzValue]="item.id">
+                  </nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+          <nz-col nzLg="8" nzXl="8" style="margin-bottom:15px;">
+            <nz-form-item nzFlex>
+              <nz-form-label nzSpan="9" [nzFor]="'cityCode'">市</nz-form-label>
+              <nz-form-control nzSpan="15">
+                <nz-select style="width: 100%" formControlName="cityCode" [attr.id]="'cityCode'" [nzPlaceHolder]="'请选择'"
+                  nzAllowClear (ngModelChange)="getDistricts($event)">
+                  <nz-option *ngFor="let item of citys" [nzLabel]="item.name" [nzValue]="item.id">
+                  </nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+          <nz-col nzLg="8" nzXl="8" style="margin-bottom:15px;">
+            <nz-form-item nzFlex>
+              <nz-form-label nzSpan="9" [nzFor]="'countyCode'">区</nz-form-label>
+              <nz-form-control nzSpan="15">
+                <nz-select style="width: 100%" formControlName="countyCode" [attr.id]="'countyCode'" [nzPlaceHolder]="'请选择'"
+                  nzAllowClear>
+                  <nz-option *ngFor="let item of districts" [nzLabel]="item.name" [nzValue]="item.id">
+                  </nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+        </nz-row>
+        <nz-row class="but-group" style="margin-top:15px;">
+          <nz-col>
+            <button nz-button [nzType]="'primary'" (click)="getList(searchForm.value)">
+              <i class="anticon anticon-search"></i>
+              <span>查询</span>
+            </button>
+            <button nz-button [nzType]="'primary'" (click)="resetForm()">
+              <i class="anticon anticon-reload"></i>
+              <span>重置</span>
+            </button>
+            <button nz-button [nzType]="'primary'" (click)="export()">
+              <i class="anticon anticon-download"></i>
+              <span>导出</span>
+            </button>
+            <button nz-button [nzType]="'primary'" (click)="entInform(false)">
+              <i class="anticon anticon-reload"></i>
+              <span>批量通知</span>
+            </button>
+          </nz-col>
+        </nz-row>
+      </form>
+    </nz-col>
+  </nz-row>
+  <nz-table #rowSelectionTable [nzData]="data" (nzCurrentPageDataChange)="currentPageDataChange($event)" [nzTotal]="total"
+    (nzPageIndexChange)="refreshStatus($event)" [nzFrontPagination]="false" [(nzPageIndex)]="pageIndex" [(nzPageSize)]="pageSize"
+    >
+    <thead>
+      <tr>
+        <th nzShowCheckbox [(nzChecked)]="allChecked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAll($event)"></th>
+        <th>企业名称</th>
+        <th>联系方式</th>
+        <th>任务更新时间</th>
+        <th>省</th>
+        <th>市</th>
+        <th>区</th>
+        <th>完成度</th>
+        <th>填报进度</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of rowSelectionTable.data;let i = index;">
+        <td *ngIf="item.informStatus==0" nzShowCheckbox [(nzChecked)]="data.checked" [nzDisabled]="data.disabled"
+          (nzCheckedChange)="refreshStatus()"></td>
+        <td *ngIf="item.informStatus!=0">
+        </td>
+        <td>{{item.entName}}</td>
+        <td>{{item.mobile}}</td>
+        <td>{{item.batchBeginDate | date:"yyyy-MM-dd"}}</td>
+        <td>{{item.provinceName}}</td>
+        <td>{{item.cityName}}</td>
+        <td>{{item.districtName}}</td>
+        <td>{{item.submittedNumber}}/{{item.reportTotal}}</td>
+        <td *ngIf="item.reportProgress==0">未填报</td>
+        <td *ngIf="item.reportProgress==1">填报中</td>
+        <td *ngIf="item.reportProgress==2">已填报</td>
+        <td>
+          <button class="btn btn-success btn-sm" (click)="entInform(item.id)" [disabled]="item.informStatus!=0">
+            通知
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>

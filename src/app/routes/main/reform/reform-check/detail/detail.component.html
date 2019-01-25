@@ -1,0 +1,321 @@
+<div>
+  <nz-row nzGutter="8">
+    <nz-col nzSpan="8">
+      <nz-row>
+        <nz-col nzSpan="10">
+          公司名称：
+          {{entInfo?.name}}
+        </nz-col>
+      </nz-row>
+    </nz-col>
+    <nz-col nzSpan="8">
+      <nz-row>
+        <nz-col nzSpan="10">
+          注册地址：
+          {{entInfo?.address}}
+        </nz-col>
+      </nz-row>
+    </nz-col>
+
+  </nz-row>
+  <nz-row nzGutter="8" class="margin-top15">
+    <nz-radio-group [(ngModel)]="currentForm">
+      <label nz-radio-button nzValue="1" *ngIf="flag0">受理申请书</label>
+      <label nz-radio-button nzValue="2">资料清单核查</label>
+      <label nz-radio-button nzValue="3">合规项核查</label>
+    </nz-radio-group>
+  </nz-row>
+  <div class="margin-top15" *ngIf="currentForm == 1">
+    <nz-table *ngIf="flag0" #borderedTable nzBordered [nzFrontPagination]="false" [nzShowPagination]="false" [nzData]="dataSetFirst">
+      <thead>
+        <tr>
+          <th>序号</th>
+          <th>文件列表</th>
+          <th>文件数量</th>
+          <th>上传时间</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of borderedTable.data;let i = index;">
+          <td>{{i + 1}}</td>
+          <td>{{data.res1}}</td>
+          <td><a (click)="showModal(data)">{{data.res0}}</a></td>
+          <td>{{data.createTime | date:'yyyy-MM-dd'}}</td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+  <div class="margin-top15" *ngIf="currentForm == 2">
+    <ul nz-menu [nzMode]="'horizontal'">
+      <li nz-menu-item *ngFor="let item of listTab;let i = index;" [nzSelected]="i == 0" (click)="getTabDetial(item.val)">{{item.name}}</li>
+    </ul>
+    <nz-table #borderedTable2 nzBordered [nzFrontPagination]="false" [nzShowPagination]="false" [nzData]="dataSetSecond">
+      <thead>
+        <tr>
+          <th nzWidth="100px">序号</th>
+          <th nzWidth="700px">文件列表</th>
+          <th>附件</th>
+          <th>上传时间</th>
+          <th nzWidth="400px">备注</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of borderedTable2.data;let i = index;">
+          <td>{{i + 1}}</td>
+          <td [innerHTML]="data.res1"></td>
+          <td><a (click)="showModal(data)">{{data.res0}}</a></td>
+          <td>{{data.createTime | date:'yyyy-MM-dd'}}</td>
+          <td>{{data.remark}}</td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+  <div class="margin-top15" *ngIf="currentForm == 3">
+    <nz-table *ngIf="flag6" #nzTable [nzData]="datas" [nzShowPagination]="false" [nzPageSize]="1000" [nzScroll]="{ y: '600px' }">
+      <thead>
+        <tr>
+          <th nzWidth="30%">审查项目及要求</th>
+          <th nzWidth="10%">审查结果</th>
+          <th nzWidth="15%">备注</th>
+          <!-- 判断是否为政府 -->
+          <th *ngIf="flag2&&isGov">协会结果</th>
+          <th *ngIf="flag2&&isGov">协会备注</th>
+          <th *ngIf="flag3&&isGov">律所结果</th>
+          <th *ngIf="flag3&&isGov">律所备注</th>
+          <th *ngIf="flag4&&isGov">会所结果</th>
+          <th *ngIf="flag4&&isGov">会所备注</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of nzTable.data; let i=index;">
+          <td class='bold' [class.sel]="item.dictId=='test01'">
+            <span>{{item.res0}}</span>
+          </td>
+          <td *ngIf="isGov">
+            <label>
+              <input type="radio" [name]="item.dictId" (click)="checkedInput(item,$event)" [checked]="item.govVerificationCase=='0'"
+                value="0"> <i [ngClass]="{'icon-color1': item.govVerificationCase=='0'}" class="iconfont icon-gou icon-color"></i>
+            </label>
+            <label>
+              <input type="radio" [name]="item.dictId" (click)="checkedInput(item,$event)" [checked]="item.govVerificationCase=='1'"
+                value="1"> <i class="iconfont icon-chacha icon-color" [ngClass]="{'icon-color2': item.govVerificationCase=='1'}"></i>
+            </label>
+          </td>
+          <td *ngIf="isTrial">
+            <label>
+              <input type="radio" [name]="item.dictId" (click)="checkedInput1(item,$event)" [checked]="item.firstVerificationCase=='0'"
+                value="0"> <i [ngClass]="{'icon-color1': item.firstVerificationCase=='0'}" class="iconfont icon-gou icon-color"></i>
+            </label>
+            <label>
+              <input type="radio" [name]="item.dictId" (click)="checkedInput1(item,$event)" [checked]="item.firstVerificationCase=='1'"
+                value="1"> <i class="iconfont icon-chacha icon-color" [ngClass]="{'icon-color2': item.firstVerificationCase=='1'}"></i>
+            </label>
+          </td>
+          <td *ngIf="isLawyer">
+            <label>
+              <input type="radio" [name]="item.dictId" (click)="checkedInput2(item,$event)" [checked]="item.lawyerVerificationCase=='0'"
+                value="0"> <i [ngClass]="{'icon-color1': item.lawyerVerificationCase=='0'}" class="iconfont icon-gou icon-color"></i>
+            </label>
+            <label>
+              <input type="radio" [name]="item.dictId" (click)="checkedInput2(item,$event)" [checked]="item.lawyerVerificationCase=='1'"
+                value="1"> <i class="iconfont icon-chacha icon-color" [ngClass]="{'icon-color2': item.lawyerVerificationCase=='1'}"></i>
+            </label>
+          </td>
+          <td *ngIf="isAccount">
+            <label>
+              <input type="radio" [name]="item.dictId" (click)="checkedInput3(item,$event)" [checked]="item.accountVerificationCase=='0'"
+                value="0"> <i [ngClass]="{'icon-color1': item.accountVerificationCase=='0'}" class="iconfont icon-gou icon-color"></i>
+            </label>
+            <label>
+              <input type="radio" [name]="item.dictId" (click)="checkedInput3(item,$event)" [checked]="item.accountVerificationCase=='1'"
+                value="1"> <i class="iconfont icon-chacha icon-color" [ngClass]="{'icon-color2': item.accountVerificationCase=='1'}"></i>
+            </label>
+          </td>
+          <td>
+            <textarea rows="4"  nz-input></textarea>
+          </td>
+          <td *ngIf="flag2&&isGov">
+            <i *ngIf="item.firstVerificationCase=='0'" class="iconfont  icon-color1 icon-gou"></i>
+            <i *ngIf="item.firstVerificationCase!='0'" class="iconfont  icon-color2 icon-chacha"></i>
+          </td>
+          <td *ngIf="flag2&&isGov">{{item.firstRemark}}</td>
+          <td *ngIf="flag3&&isGov">
+            <i *ngIf="item.lawyerVerificationCase=='0'" class="iconfont  icon-color1 icon-gou"></i>
+            <i *ngIf="item.lawyerVerificationCase!='0'" class="iconfont  icon-color2 icon-chacha"></i>
+          </td>
+          <td *ngIf="flag3&&isGov">{{item.lawyerRemark}}
+          </td>
+          <td *ngIf="flag4&&isGov">
+            <i *ngIf="item.accountVerificationCase=='0'" class="iconfont  icon-color1 icon-gou"></i>
+            <i *ngIf="item.accountVerificationCase!='0'" class="iconfont  icon-color2 icon-chacha"></i>
+          </td>
+          <td *ngIf="flag4&&isGov">{{item.accountRemark}}
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+    <div *ngIf="isGov">
+      <nz-row class="margin-top15" nzGutter="8">
+        <nz-col nzSpan="4">
+          行政人员审核建议：
+        </nz-col>
+        <nz-col nzSpan="20">
+          <textarea nz-input rows="6" [disabled]="only" [(ngModel)]="reformCommitParams.first" [nzAutosize]="false"></textarea>
+        </nz-col>
+      </nz-row>
+      <nz-row class="margin-top15" nzGutter="8">
+        <nz-col nzSpan="4">
+          P2P网贷机构审查结果意见书:
+        </nz-col>
+        <nz-col nzSpan="4">
+          <button (click)="upload('p2p')" nz-button nzType="primary">上传材料</button>
+        </nz-col>
+        <nz-col class="red" nzSpan="4">
+          *请上传加盖公章且本人签字的报告
+        </nz-col>
+      </nz-row>
+      <nz-row class="margin-top15" nzGutter="8">
+        <nz-col nzSpan="4">
+          线上整改通知书:
+        </nz-col>
+        <nz-col nzSpan="4">
+          <button (click)="upload('online')" nz-button nzType="primary">上传材料</button>
+        </nz-col>
+      </nz-row>
+    </div>
+    <div *ngIf="isAccount">
+      <nz-row class="margin-top15" nzGutter="8">
+        <nz-col nzSpan="4">
+          建议：
+        </nz-col>
+        <nz-col nzSpan="20">
+          <textarea nz-input rows="6" [disabled]="only" [(ngModel)]="reformCommitParams.first" [nzAutosize]="false"></textarea>
+        </nz-col>
+      </nz-row>
+      <nz-row class="margin-top15" nzGutter="8">
+        <nz-col nzSpan="4">
+          <span class="red">*</span> 会所审核结果报告上传:
+        </nz-col>
+        <nz-col nzSpan="4">
+          <button (click)="upload('kj_result')" nz-button nzType="primary">上传材料</button>
+        </nz-col>
+        <nz-col class="red" nzSpan="4">
+          *请上传加盖公章且本人签字的报告
+        </nz-col>
+      </nz-row>
+      <nz-row class="margin-top15" nzGutter="8">
+        <nz-col nzSpan="4">
+          访谈笔录上传:
+        </nz-col>
+        <nz-col nzSpan="4">
+          <button (click)="upload('kj_pencil')" nz-button nzType="primary">上传材料</button>
+        </nz-col>
+      </nz-row>
+    </div>
+    <div *ngIf="isLawyer">
+      <nz-row class="margin-top15" nzGutter="8">
+        <nz-col nzSpan="4">
+          建议：
+        </nz-col>
+        <nz-col nzSpan="20">
+          <textarea nz-input rows="6" [(ngModel)]="reformCommitParams.first" [disabled]="only" [nzAutosize]="false"></textarea>
+        </nz-col>
+      </nz-row>
+      <nz-row class="margin-top15" nzGutter="8">
+        <nz-col nzSpan="4">
+          <span class="red">*</span> 律所审核结果报告上传:
+        </nz-col>
+        <nz-col nzSpan="4">
+          <button (click)="upload('law_result')" nz-button nzType="primary">上传材料</button>
+        </nz-col>
+        <nz-col class="red" nzSpan="4">
+          *请上传加盖公章且本人签字的报告
+        </nz-col>
+      </nz-row>
+      <nz-row class="margin-top15" nzGutter="8">
+        <nz-col nzSpan="4">
+          访谈笔录上传:
+        </nz-col>
+        <nz-col nzSpan="4">
+          <button (click)="upload('law_pencil')" nz-button nzType="primary">上传材料</button>
+        </nz-col>
+      </nz-row>
+    </div>
+    <div *ngIf="isTrial">
+      <nz-row class="margin-top15" nzGutter="8">
+        <nz-col nzSpan="4">
+          建议：
+        </nz-col>
+        <nz-col nzSpan="20">
+          <textarea nz-input rows="6" [(ngModel)]="reformCommitParams.first" [disabled]="only" [nzAutosize]="false"></textarea>
+        </nz-col>
+      </nz-row>
+      <nz-row class="margin-top15" nzGutter="8">
+        <nz-col nzSpan="4">
+          报告上传:
+        </nz-col>
+        <nz-col nzSpan="4">
+          <button (click)="upload('xs_first')" nz-button nzType="primary">上传材料</button>
+        </nz-col>
+      </nz-row>
+      <nz-row class="margin-top15" nzGutter="8">
+        <nz-col nzSpan="4">
+          结果:
+        </nz-col>
+        <nz-col nzSpan="4">
+          <nz-radio-group [disabled]="only" [(ngModel)]="reformCommitParams.third">
+            <label nz-radio nzValue="A">通过</label>
+            <label nz-radio nzValue="B">初审不合格</label>
+          </nz-radio-group>
+        </nz-col>
+      </nz-row>
+    </div>
+
+    <nz-row nzGutter="8" class="margin-top15">
+      <nz-col nzSpan="24" style="text-align:center;">
+        <button (click)="save()" [disabled]="only" nz-button nzType="primary">保存</button>
+        <button (click)="commit()" [disabled]="only" nz-button nzType="primary">提交</button>
+
+      </nz-col>
+    </nz-row>
+  </div>
+  <nz-modal [(nzVisible)]="isVisible1" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter"
+    (nzOnCancel)="handleCancel()">
+    <ng-template #modalTitle>
+      文件详情
+    </ng-template>
+
+    <ng-template #modalContent>
+      <p *ngFor="let item of itemFiles">{{item.name}} {{item.createTime | date:'yyyy-MM-dd'}} <a (click)="preview(item.url)">预览</a></p>
+    </ng-template>
+
+    <ng-template #modalFooter>
+      <button nz-button nzType="primary" (click)="handleOk()" [nzLoading]="isConfirmLoading">确认</button>
+    </ng-template>
+  </nz-modal>
+  <nz-modal [(nzVisible)]="isVisible2" [nzTitle]="modalTitle1" [nzContent]="modalContent1" [nzFooter]="modalFooter1"
+    (nzOnCancel)="handleCancel()">
+    <ng-template #modalTitle1>
+      文件上传
+    </ng-template>
+
+    <ng-template #modalContent1>
+      <nz-row nzGutter="8">
+        <nz-upload [nzCustomRequest]="change" [nzAccept]="application/pdf" [nzFileList]="[]" [nzShowButton]="!only"
+          [nzShowUploadList]="false">
+          <button nz-button>
+            <i class="anticon anticon-upload"></i>
+            <span>点击上传</span>
+          </button>
+        </nz-upload>
+        <nz-progress *ngIf="progress < 100 && progress > 0" [nzPercent]="progress" nzSize="small"></nz-progress>
+      </nz-row>
+      <p *ngFor="let item of upfiles">{{item.name}} {{item.createTime | date:'yyyy-MM-dd'}} <a (click)="preview(item.url)">预览</a>
+        <a style="margin-left: 15px;color:red;" *ngIf="!only" (click)="delFile(item)">删除</a></p>
+    </ng-template>
+
+    <ng-template #modalFooter1>
+      <button nz-button nzType="primary" (click)="handleOk()" [nzLoading]="isConfirmLoading">确认</button>
+    </ng-template>
+  </nz-modal>
+</div>

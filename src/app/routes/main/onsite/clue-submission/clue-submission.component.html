@@ -1,0 +1,122 @@
+<div>
+  <form class="SearchForm" nz-form [formGroup]="searchForm">
+    <nz-row>
+      <!-- <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9" [nzFor]="'provinceCode'">省</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-select style="width: 100%" formControlName="provinceCode" [attr.id]="'provinceCode'" [nzPlaceHolder]="'请选择'"
+              nzAllowClear (ngModelChange)="getCitys($event)">
+              <nz-option *ngFor="let item of provinces" [nzLabel]="item.name" [nzValue]="item.id">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9" [nzFor]="'cityCode'">市</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-select style="width: 100%" formControlName="cityCode" [attr.id]="'cityCode'" [nzPlaceHolder]="'请选择'"
+              nzAllowClear (ngModelChange)="getDistricts($event)">
+              <nz-option *ngFor="let item of citys" [nzLabel]="item.name" [nzValue]="item.id">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9" [nzFor]="'countyCode'">区</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-select style="width: 100%" formControlName="countyCode" [attr.id]="'countyCode'" [nzPlaceHolder]="'请选择'"
+              nzAllowClear (ngModelChange)="getRoads($event)">
+              <nz-option *ngFor="let item of districts" [nzLabel]="item.name" [nzValue]="item.id">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9" [nzFor]="'countyCode'">街道</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-select style="width: 100%" formControlName="countyCode" [attr.id]="'countyCode'" [nzPlaceHolder]="'请选择'"
+              nzAllowClear (ngModelChange)="getCitys($event)">
+              <nz-option *ngFor="let item of roads" [nzLabel]="item.name" [nzValue]="item.id">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col> -->
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9" [nzFor]="'companyName'">企业名称</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <input nz-input formControlName="companyName" placeholder="请输入企业名称">
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9" [nzFor]="'createUser'">核查员</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <input nz-input formControlName="createUser" placeholder="请输入核查员">
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzMd="6" nzLg="8" nzXl="6">
+        <nz-form-item nzFlex>
+          <nz-form-label nzSpan="9" [nzFor]="'threadLevel'">线索级别</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <nz-select style="width: 100%" formControlName="threadLevel" [attr.id]="'threadLevel'" [nzPlaceHolder]="'请选择'"
+              nzAllowClear>
+              <nz-option *ngFor="let item of statusArr" [nzLabel]="item.name" [nzValue]="item.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+    </nz-row>
+    <nz-row class="but-group">
+      <button nz-button [nzType]="'primary'" (click)="getList(searchForm.value)" (keyup.enter)="getList(searchForm.value)">
+        <i class="anticon anticon-search"></i>
+        <span>查询</span>
+      </button>
+      <button nz-button [nzType]="'primary'" (click)="resetForm()">
+        <i class="anticon anticon-reload"></i>
+        <span>重置</span>
+      </button>
+    </nz-row>
+  </form>
+  <nz-table #rowSelectionTable [nzData]="data" (nzCurrentPageDataChange)="currentPageDataChange($event)"
+    (nzPageIndexChange)="changePage($event)" [nzTotal]="total" [(nzPageIndex)]="pageIndex" [(nzPageSize)]="pageSize"
+    [nzFrontPagination]="false" >
+    <thead>
+      <tr>
+        <th>序号</th>
+        <th>地址</th>
+        <th>企业名称</th>
+        <th>核查员</th>
+        <th>线索描述</th>
+        <th>线索级别</th>
+        <th>上报时间</th>
+        <th *ngIf="menuList[0].show">操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of rowSelectionTable.data;let i = index;">
+        <td>{{i+1}}</td>
+        <td>{{data.address}}</td>
+        <td>{{data.companyName}}</td>
+        <td>{{data.createUser}}</td>
+        <td>{{data.threadType}}</td>
+        <td>{{data.threadLevel=='null'?'':(data.threadLevel=='0'?'无需关注':(data.threadLevel=='1'?'一般':(data.threadLevel=='2'?'严重':'')))}}</td>
+        <td>{{data.createTime | date:'y-MM-dd'}}</td>
+        <td *ngIf="menuList[0].show">
+          <button nz-button nzType="primary"  [routerLink]="[ './Detail', data.threadId ]"><span>详情</span></button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>

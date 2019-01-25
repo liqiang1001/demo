@@ -1,0 +1,51 @@
+<form action="" [formGroup]="resetForm">
+  <nz-row *ngIf="flag">
+    <nz-col >
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="6">请输入新密码</nz-form-label>
+        <nz-form-control nzSpan="12">
+          <nz-col>
+            <input nz-input formControlName="newpass" type="password" #PassInput type="password" autofocus>
+          </nz-col>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+  </nz-row>
+  <nz-row *ngIf="flag">
+    <nz-col >
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="6">确定新密码</nz-form-label>
+        <nz-form-control nzSpan="12">
+          <nz-col>
+            <input nz-input formControlName="newpass2" type="password">
+          </nz-col>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+  </nz-row>
+  <nz-row *ngIf="!flag">
+    <nz-col>
+      <nz-form-item nzFlex>
+        <nz-form-label nzSpan="6">新手机号</nz-form-label>
+        <nz-form-control nzSpan="12">
+          <nz-col>
+            <input nz-input formControlName="mobile" #PhoneInput autofocus>
+          </nz-col>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+  </nz-row>
+  <div class="customize-footer" style="height:40px;
+padding: 20px 0 30px 0;border-top: 1px solid #e8e8e8;margin-top:25px">
+    <div nz-col [nzSpan]="12" style="text-align:center">
+      <button nz-button [nzType]="'primary'" (click)="handleCancel()">
+        返 回
+      </button>
+    </div>
+    <div nz-col [nzSpan]="12" style="text-align:center">
+      <button nz-button [nzType]="'primary'" (click)="modifyPriseUser(resetForm.value)">
+        确定
+      </button>
+    </div>
+  </div>
+</form>

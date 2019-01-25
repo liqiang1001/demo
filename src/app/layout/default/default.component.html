@@ -1,0 +1,20 @@
+<div class="container" [ngClass]="{'isCollapsed': isCollapsed}">
+  <div class="router-progress-bar" *ngIf="isFetching"></div>
+  <layout-header class="header" ></layout-header>
+  <layout-sidebar class="aside" [isCollapsed]="false" (toggle)="toggleMenu($event)" [menu]="MENU"></layout-sidebar>
+  
+  <section class="content">
+    <div class="nav">
+      <span>首页</span>
+        <nz-breadcrumb class="breadcrumb" [nzAutoGenerate]="true"></nz-breadcrumb>
+      <!-- <span *ngFor="let item of nav">{{item.name}}</span>  -->
+    </div>
+    <nz-divider style="margin: 10px auto;"></nz-divider>
+    <router-outlet></router-outlet>
+    <div class="loading" *ngIf="isLoading">
+        <svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+          <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+       </svg>
+    </div>
+  </section>
+</div>

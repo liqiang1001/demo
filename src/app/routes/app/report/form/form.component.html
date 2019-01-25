@@ -1,0 +1,31 @@
+<div>
+  <div nz-row>
+    <div *ngFor="let item of Form">
+      <div class="form-item" *ngIf="item && item.isShow && !!item.constrainFields" nz-col nzSpan="20">
+        <app-form-item [item]='item' [State]='State' (valueChange)="setValue($event,item)"></app-form-item>
+      </div>
+      <div class="form-item" *ngIf="item && item.isShow && !item.constrainFields" nz-col nzSpan="10">
+        <app-form-item [item]='item' [State]='State' (valueChange)="setValue($event,item)"></app-form-item>
+      </div>
+    </div>
+
+  </div>
+  <div nz-row nzType="flex" nzJustify="center" *ngIf="Form">
+    <button *ngIf="!State && FormType == 1" (click)="saveForm(0)" nzType="primary" nz-button>保存</button>
+    <button *ngIf="!State && FormType == 3 && !!FormId" (click)="saveForm(0)" nzType="primary" nz-button>保存</button>
+    <button *ngIf="!State && FormType == 3 && !FormId" (click)="saveForm(0)" nzType="primary" nz-button>添加</button>
+    <button *ngIf="!State && FormType != 3 " (click)="saveForm(1)" nzType="primary" nz-button>提交</button>
+    <button *ngIf="State" (click)="changeForm(tplContent,tplFooter)" nzType="primary" nz-button>变更</button>
+
+  </div>
+  <ng-template #tplContent>
+    <p><span style="color: red;">*</span>变更理由：</p>
+    <div>
+      <textarea nz-input [(ngModel)]="requestCause" id="reason" name="reason"></textarea>
+    </div>
+  </ng-template>
+  <ng-template #tplFooter>
+    <button nz-button nzType="primary" (click)="changeFormServe()">确定</button>
+    <button nz-button nzType="default" (click)="destroyTplModal()">返回</button>
+  </ng-template>
+</div>

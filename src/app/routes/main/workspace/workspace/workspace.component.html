@@ -1,0 +1,46 @@
+<div class="container">
+    <div class="board" nz-row>
+        <div nz-col *ngFor="let item of types1;let i = index;">
+            <div *ngIf="item.value">
+                <div class="board-item">
+                    <h3>{{item.name}}</h3>
+                    <div *ngFor="let unit of item.items">
+                        <div class="board-item-name">
+                            <i nz-icon [type]="unit.icon" theme="outline"></i>
+                            <h4>{{unit.name}}</h4>
+                        </div>
+                        <div class="board-item-link" *ngIf="!checkType">
+                            <a [routerLink]="[ '/main/workspace/'+unit.path+'/detail', {type:unit.value,dlType:item.value} ]">+新建</a>
+                            <a [routerLink]="[ '/main/workspace/'+unit.path, {type:unit.value,dlType:item.value} ]">查看历史</a>
+                        </div>
+                        <div class="board-item-link" *ngIf="checkType">
+                            <a [routerLink]="[ '/main/govern/oneCompanyOneFile/'+unit.path+'/detail', {type:unit.value,dlType:item.value,companyId:companyId,companyName:companyName} ]">+新建</a>
+                            <a [routerLink]="[ '/main/govern/oneCompanyOneFile/'+unit.path, {type:unit.value,dlType:item.value} ]">查看历史</a>
+                        </div>
+                    </div>
+                    <div *ngIf="i < 3">
+                        <div class="board-item-name">
+                            <i nz-icon type="bank" theme="outline"></i>
+                            <h4>政府工作组</h4>
+                        </div>
+                        <div class="board-item-link">
+                            <a href="assets/上传模板.xlsx" >模板下载</a>
+                            
+                            <a class="upload" (click)="triggerUpload($event)">资料上传<input type="file" (change)="upload($event,{workType:item.value,groupType:'WorkerType1'})"></a>
+                        </div>
+                    </div>
+                    <div *ngIf="i < 3">
+                        <div class="board-item-name">
+                            <i nz-icon type="shop" theme="outline"></i>
+                            <h4>企业工作组</h4>
+                        </div>
+                        <div class="board-item-link">
+                            <a href="assets/上传模板.xlsx">模板下载</a>
+                            <a class="upload" (click)="triggerUpload($event)">资料上传<input type="file" (change)="upload($event,{workType:item.value,groupType:'WorkerType3'})"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

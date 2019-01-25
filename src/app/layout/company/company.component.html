@@ -1,0 +1,12 @@
+<div class="container">
+    <div class="router-progress-bar" *ngIf="isFetching"></div>
+    <layout-header2 class="header" ></layout-header2>
+    <section class="content">
+      <router-outlet></router-outlet>
+    </section>
+    <div class="tools">
+      <a [routerLink]="[ '/app' ]">
+        <button nzSize="large" nz-button nzType="primary" nzShape="circle"><i nz-icon type="home" theme="outline"></i></button>
+      </a>
+    </div>
+  </div>

@@ -1,0 +1,54 @@
+.container{
+    background-image: url(../../../assets/image/background.png);
+    background-repeat: no-repeat;
+    background-position: center 0;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100%;
+    position: relative;
+    .head{
+
+    }
+    .wrap{
+        align-self:flex-end;
+        width:360px;
+        // height:440px;
+        margin-right: 10%;
+        background:rgba(255,255,255,1);
+        z-index: 1;
+        position: relative;
+    }
+    .foot{
+        height: 113px;
+        background-color: #2E2E2E;
+    }
+    .animate-element{
+        position: absolute;
+        top: 50%;
+        left: 150px;
+        transform: translateY(-60%);
+        width:40%;
+        img{
+            width:100%;
+            height:auto;
+        }
+    }
+    .animate-element:hover{
+        animation: flash 3s ease-in-out infinite;
+        -webkit-animation: flash 3s ease-in-out infinite;
+        -moz-animation: flash 3s ease-in-out infinite;
+    }
+    @keyframes flash {
+        0%{
+            top:50%
+        }
+        50%{
+            top:45%
+        }
+        100%{
+            top:50%
+        }
+    }
+}

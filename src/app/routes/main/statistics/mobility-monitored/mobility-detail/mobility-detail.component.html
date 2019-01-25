@@ -1,0 +1,47 @@
+<div>
+  <nz-row [nzGutter]="24">
+    <nz-col [nzMd]="6">
+      企业名称：
+      <!-- {{mobilityDetail.sysEnterprise.name}} -->
+    </nz-col>
+    <nz-col [nzMd]="6">
+      是否整改通知书：
+      <!-- <span *ngIf="mobilityDetail.isRectifyInform==0">否</span>
+      <span *ngIf="mobilityDetail.isRectifyInform==1">是</span> -->
+    </nz-col>
+    <nz-col [nzMd]="6">
+      平台名称：
+      <!-- {{mobilityDetail.website}} -->
+    </nz-col>
+  </nz-row>
+  <nz-row [nzGutter]="24" style="margin-top:15px;">
+    <nz-col [nzMd]="6">
+      应收回金额：
+      <!-- {{mobilityDetail.lgmc_rsv_00}} -->
+    </nz-col>
+    <nz-col [nzMd]="6">
+      应兑付金额：
+      <!-- {{mobilityDetail.lgmc_rsv_01}} -->
+    </nz-col>
+    <nz-col [nzMd]="6">
+      分险估值：
+      <!-- <span *ngIf="mobilityDetail.riskValue==0">低风险</span>
+      <span *ngIf="mobilityDetail.riskValue==1">高危</span>
+      <span *ngIf="mobilityDetail.riskValue==2">建议关注</span> -->
+    </nz-col>
+  </nz-row>
+  <nz-row [nzGutter]="24" style="margin-top:20px;">
+    <nz-col [nzMd]="18">
+      <button nz-button [nzType]="'primary'" (click)="goBack()">
+        <i class="anticon anticon-rollback"></i>
+        <span>返回</span>
+      </button>
+    </nz-col>
+  </nz-row>
+  <nz-row  style="margin-top: 4%;">
+      <div echarts [options]="options"></div>
+    </nz-row>
+    <nz-row  style="margin-top: 4%;">
+      <div echarts [options]="options2"></div>
+    </nz-row>
+</div>
